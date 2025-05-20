@@ -29,9 +29,15 @@
   },
   "homepage": "https://github.com/orbitearn/orbit-controller-elysia#readme",
   "dependencies": {
-    "elysia": "latest"
+    "@chain-registry/types": "^0.50.135",
+    "@cosmjs/cosmwasm-stargate": "^0.33.1",
+    "@cosmjs/stargate": "^0.33.1",
+    "crypto-js": "^4.2.0",
+    "elysia": "latest",
+    "mathjs": "^14.4.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "bun-types": "latest"
   }
 }

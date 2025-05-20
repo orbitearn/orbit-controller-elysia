@@ -113,19 +113,6 @@ export function signAndBroadcastWrapper(
   };
 }
 
-export function getGasPriceFromChainRegistryItem(chain: Chain): string {
-  const gasPriceAmountDefault = 0.005;
-  let gasPriceAmount = 0;
-
-  const minGasPrice = chain?.fees?.fee_tokens?.[0]?.average_gas_price;
-  if (minGasPrice) gasPriceAmount = minGasPrice;
-
-  gasPriceAmount = Math.max(gasPriceAmountDefault, gasPriceAmount);
-  const gasPrice = `${gasPriceAmount}${chain.fees?.fee_tokens[0]?.denom}`;
-
-  return gasPrice;
-}
-
 export function getExecuteContractMsg(
   contractAddress: string,
   senderAddress: string,
