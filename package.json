@@ -1,16 +1,37 @@
 {
   "name": "orbit-controller-elysia",
   "version": "1.0.50",
+  "description": "",
+  "main": "./src/backend/index.ts",
+  "module": "./src/backend/index.ts",
+  "private": true,
+  "engines": {
+    "node": ">=22.x"
+  },
   "scripts": {
     "start": "bun run src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "call": "bun run ./src/backend/services/call-contract.ts",
+    "json": "bun run ./src/backend/services/generate-json.ts",
+    "capture-user-info": "bun run ./src/backend/services/capture/user-info.ts",
+    "counter-diff": "bun run ./src/backend/services/capture/counter-diff.ts"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbitearn/orbit-controller-elysia"
+  },
+  "keywords": [],
+  "author": "M. Daeva",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/orbitearn/orbit-controller-elysia/issues"
+  },
+  "homepage": "https://github.com/orbitearn/orbit-controller-elysia#readme",
   "dependencies": {
     "elysia": "latest"
   },
   "devDependencies": {
     "bun-types": "latest"
-  },
-  "module": "src/index.js"
+  }
 }

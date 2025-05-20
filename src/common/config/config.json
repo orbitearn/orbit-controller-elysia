@@ -1,0 +1,55 @@
+{
+  "CHAINS": [
+    {
+      "NAME": "neutron",
+      "PREFIX": "neutron",
+      "OPTIONS": [
+        {
+          "TYPE": "test",
+          "DENOM": "untrn",
+          "CHAIN_ID": "pion-1",
+          "RPC_LIST": [
+            "https://rpc.testcosmos.directory/neutrontestnet",
+            "https://rpc-falcron.pion-1.ntrn.tech:443"
+          ],
+          "GAS_PRICE_AMOUNT": 0.0053,
+          "STORE_CODE_GAS_MULTIPLIER": 21.5,
+          "CONTRACTS": [
+            {
+              "WASM": "bank.wasm",
+              "LABEL": "bank",
+              "INIT_MSG": "{}",
+              "MIGRATE_MSG": "{}",
+              "UPDATE_MSG": "{}",
+              "CODE": 11740,
+              "ADDRESS": "neutron10sx0wvwsk4w680ev6tuumm2hl8aydeagm22p00zkeea64x6muyjsg79mkn"
+            }
+          ],
+          "IBC": []
+        },
+        {
+          "TYPE": "main",
+          "DENOM": "untrn",
+          "CHAIN_ID": "neutron-1",
+          "RPC_LIST": [
+            "https://rpc.cosmos.directory/neutron"
+          ],
+          "GAS_PRICE_AMOUNT": 0.0053,
+          "STORE_CODE_GAS_MULTIPLIER": 21.5,
+          "CONTRACTS": [
+            {
+              "WASM": "bank.wasm",
+              "LABEL": "bank",
+              "INIT_MSG": "{}",
+              "MIGRATE_MSG": "{}",
+              "UPDATE_MSG": "{}",
+              "CODE": 0,
+              "ADDRESS": ""
+            }
+          ],
+          "IBC": []
+        }
+      ]
+    }
+  ]
+}
