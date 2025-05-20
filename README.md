@@ -38,8 +38,8 @@ cd orbit-controller && yarn
 5) Create env file and specify seed phrase for account sending messages to orbit contract
 
 ```
-touch config.env && chmod 600 ./config.env
-nano ./config.env
+touch .env && chmod 600 .env
+nano .env
 ```
 
 Enter actual values (replace placeholders <_>)

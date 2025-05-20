@@ -1,7 +1,6 @@
 import { l } from "../utils";
 import { Tendermint37Client } from "@cosmjs/tendermint-rpc";
 import { fromBech32, toBech32, toUtf8 } from "@cosmjs/encoding";
-import { Chain } from "@chain-registry/types";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
 import {
   SigningCosmWasmClient,

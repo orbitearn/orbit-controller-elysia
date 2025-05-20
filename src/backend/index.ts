@@ -48,27 +48,9 @@ import {
   PATH_TO_CONFIG_JSON,
   toDate,
 } from "./services/utils";
-import {
-  MONGODB,
-  ORBIT_CONTROLLER,
-  PORT,
-  SEED,
-  LOCAL_IP_LIST,
-  LOCAL_PORT_LIST,
-  BE_DEV_URL,
-  BE_TUNNEL_URL,
-  BE_PROD_URL,
-  FE_DEV_URL,
-  FE_STAGE_URL,
-  FE_PROD_URL,
-  FE_DEV_NEW_URL,
-  FE_STAGE_NEW_URL,
-  FE_PROD_NEW_URL,
-  rootPath,
-  IS_PROD,
-} from "./envs";
+import { rootPath, ENV } from "./envs";
 
-const dbClient = new DatabaseClient(MONGODB, ORBIT_CONTROLLER);
+const dbClient = new DatabaseClient(ENV.MONGODB, ENV.ORBIT_CONTROLLER);
 
 const limiter = rateLimit({
   windowMs: 60 * MS_PER_SECOND, // 1 minute
@@ -161,7 +143,7 @@ const [devKey, devCert] = [
   "src/backend/ssl/key.pem",
   "src/backend/ssl/cert.pem",
 ];
-const [key, cert] = IS_PROD ? [prodKey, prodCert] : [devKey, devCert];
+const [key, cert] = ENV.IS_PROD ? [prodKey, prodCert] : [devKey, devCert];
 const options = {
   key: fs.readFileSync(rootPath(key)),
   cert: fs.readFileSync(rootPath(cert)),
@@ -169,7 +151,7 @@ const options = {
 
 app.use("/api", api);
 
-https.createServer(options, app).listen(PORT, async () => {
+https.createServer(options, app).listen(ENV.PORT, async () => {
   // init
   const configJsonStr = await readFile(PATH_TO_CONFIG_JSON, {
     encoding: ENCODING,
@@ -187,7 +169,7 @@ https.createServer(options, app).listen(PORT, async () => {
   const bankAddress = getContractByLabel(CONTRACTS, "bank")?.ADDRESS || "";
 
   const gasPrice = `${GAS_PRICE_AMOUNT}${DENOM}`;
-  const { signer, owner } = await getSigner(PREFIX, SEED);
+  const { signer, owner } = await getSigner(PREFIX, ENV.SEED);
   const { bank } = await getCwQueryHelpers(CHAIN_ID, RPC);
   const h = await getCwExecHelpers(CHAIN_ID, RPC, owner, signer);
 
@@ -237,7 +219,7 @@ https.createServer(options, app).listen(PORT, async () => {
   let nextUpdateDate = scriptStartTimestamp;
 
   console.clear();
-  le(`\n✔️ Server is running on PORT: ${PORT}`);
+  le(`\n✔️ Server is running on PORT: ${ENV.PORT}`);
 
   // the script should be started earlier to be ready to update just in time
   scriptStartTimestamp -= 5 * BANK.CYCLE_COOLDOWN;

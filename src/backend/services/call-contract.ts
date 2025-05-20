@@ -15,14 +15,7 @@ import {
   getCwExecHelpers,
   getCwQueryHelpers,
 } from "../../common/account/cw-helpers";
-import {
-  MONGODB,
-  ORBIT_CONTROLLER,
-  USER_SEED,
-  BE_PROD_URL,
-  BE_DEV_URL,
-  IS_PROD,
-} from "../envs";
+import { ENV } from "../envs";
 import {
   floor,
   getLast,
@@ -33,9 +26,9 @@ import {
   wait,
 } from "../../common/utils";
 
-const dbClient = new DatabaseClient(MONGODB, ORBIT_CONTROLLER);
-const baseURL = (IS_PROD ? BE_PROD_URL : BE_DEV_URL) + "/api";
-const httpsAgent = IS_PROD
+const dbClient = new DatabaseClient(ENV.MONGODB, ENV.ORBIT_CONTROLLER);
+const baseURL = (ENV.IS_PROD ? ENV.BE_PROD_URL : ENV.BE_DEV_URL) + "/api";
+const httpsAgent = ENV.IS_PROD
   ? undefined
   : new https.Agent({
       rejectUnauthorized: false,
@@ -60,7 +53,7 @@ async function main() {
     const gasPrice = `${GAS_PRICE_AMOUNT}${DENOM}`;
 
     // local interchain alice: neutron1q5u23ppwrf7jvns33u9rm2xu8u37wyy64xj4zs
-    const { signer, owner } = await getSigner(PREFIX, USER_SEED);
+    const { signer, owner } = await getSigner(PREFIX, ENV.USER_SEED);
 
     const sgQueryHelpers = await getSgQueryHelpers(RPC);
     const sgExecHelpers = await getSgExecHelpers(RPC, owner, signer);

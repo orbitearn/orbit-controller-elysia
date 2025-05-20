@@ -1,16 +1,13 @@
 {
   "name": "orbit-controller-elysia",
-  "version": "1.0.50",
+  "version": "1.0.0",
   "description": "",
   "main": "./src/backend/index.ts",
   "module": "./src/backend/index.ts",
   "private": true,
-  "engines": {
-    "node": ">=22.x"
-  },
   "scripts": {
     "start": "bun run src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "bun test",
     "dev": "bun run --watch src/index.ts",
     "call": "bun run ./src/backend/services/call-contract.ts",
     "json": "bun run ./src/backend/services/generate-json.ts",
@@ -29,15 +26,14 @@
   },
   "homepage": "https://github.com/orbitearn/orbit-controller-elysia#readme",
   "dependencies": {
-    "@chain-registry/types": "^0.50.135",
     "@cosmjs/cosmwasm-stargate": "^0.33.1",
     "@cosmjs/stargate": "^0.33.1",
     "crypto-js": "^4.2.0",
-    "elysia": "latest",
+    "elysia": "^1.3.1",
     "mathjs": "^14.4.0"
   },
   "devDependencies": {
-    "@types/crypto-js": "^4.2.2",
-    "bun-types": "latest"
+    "@types/bun": "^1.2.13",
+    "@types/crypto-js": "^4.2.2"
   }
 }

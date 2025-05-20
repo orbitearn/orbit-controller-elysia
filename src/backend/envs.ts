@@ -1,32 +1,43 @@
-import dotenv from "dotenv";
 import path from "path";
-import fs from "fs";
 
-export function rootPath(dir: string) {
+export function rootPath(dir: string): string {
   return path.resolve(__dirname, "../../", dir);
 }
 
-const envPath = rootPath("./config.env");
+const schema = {
+  SEED: (v: string) => v,
+  USER_SEED: (v: string) => v,
+  MONGODB: (v: string) => v,
+  ORBIT_CONTROLLER: (v: string) => v,
+  PORT: (v: string) => v,
+  LOCAL_IP_LIST: (v: string) => JSON.parse(v) as string[],
+  LOCAL_PORT_LIST: (v: string) => JSON.parse(v) as number[],
+  BE_DEV_URL: (v: string) => v,
+  BE_TUNNEL_URL: (v: string) => v,
+  BE_PROD_URL: (v: string) => v,
+  FE_DEV_URL: (v: string) => v,
+  FE_STAGE_URL: (v: string) => v,
+  FE_PROD_URL: (v: string) => v,
+  FE_DEV_NEW_URL: (v: string) => v,
+  FE_STAGE_NEW_URL: (v: string) => v,
+  FE_PROD_NEW_URL: (v: string) => v,
+  IS_PROD: (v: string) => v === "true",
+};
 
-if (fs.existsSync(envPath)) {
-  dotenv.config({ path: envPath });
+// infer the Env type from the schema
+type Env = {
+  [K in keyof typeof schema]: ReturnType<(typeof schema)[K]>;
+};
+
+// load and parse env
+export const ENV = {} as Env;
+
+for (const key in schema) {
+  const raw = Bun.env[key];
+
+  if (typeof raw === "undefined") {
+    throw new Error(`Missing environment variable: ${key}`);
+  }
+
+  (ENV as any)[key] = (schema as any)[key](raw);
 }
-const e = process.env as { [key: string]: string };
-
-export const SEED = e.SEED,
-  USER_SEED = e.USER_SEED,
-  MONGODB = e.MONGODB,
-  ORBIT_CONTROLLER = e.ORBIT_CONTROLLER,
-  PORT = e.PORT,
-  LOCAL_IP_LIST = JSON.parse(e.LOCAL_IP_LIST) as string[],
-  LOCAL_PORT_LIST = JSON.parse(e.LOCAL_PORT_LIST) as number[],
-  BE_DEV_URL = e.BE_DEV_URL,
-  BE_TUNNEL_URL = e.BE_TUNNEL_URL,
-  BE_PROD_URL = e.BE_PROD_URL,
-  FE_DEV_URL = e.FE_DEV_URL,
-  FE_STAGE_URL = e.FE_STAGE_URL,
-  FE_PROD_URL = e.FE_PROD_URL,
-  FE_DEV_NEW_URL = e.FE_DEV_NEW_URL,
-  FE_STAGE_NEW_URL = e.FE_STAGE_NEW_URL,
-  FE_PROD_NEW_URL = e.FE_PROD_NEW_URL,
-  IS_PROD = e.IS_PROD === "true";
