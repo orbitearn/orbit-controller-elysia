@@ -4,6 +4,9 @@
   "description": "",
   "main": "./src/backend/index.ts",
   "module": "./src/backend/index.ts",
+  "volta": {
+    "node": "22.15.1"
+  },
   "private": true,
   "scripts": {
     "start": "bun run src/index.ts",
@@ -31,10 +34,12 @@
     "@elysiajs/swagger": "^1.3.0",
     "crypto-js": "^4.2.0",
     "elysia": "^1.3.1",
-    "mathjs": "^14.4.0"
+    "mathjs": "^14.4.0",
+    "mongoose": "^8.15.0"
   },
   "devDependencies": {
     "@types/bun": "^1.2.13",
-    "@types/crypto-js": "^4.2.2"
+    "@types/crypto-js": "^4.2.2",
+    "prisma": "^6.8.2"
   }
 }
