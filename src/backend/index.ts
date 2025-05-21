@@ -50,7 +50,7 @@ import {
 } from "./services/utils";
 import { rootPath, ENV } from "./envs";
 
-const dbClient = new DatabaseClient(ENV.MONGODB, ENV.ORBIT_CONTROLLER);
+const dbClient = new DatabaseClient(ENV.DATABASE_URL, ENV.ORBIT_CONTROLLER);
 
 const limiter = rateLimit({
   windowMs: 60 * MS_PER_SECOND, // 1 minute

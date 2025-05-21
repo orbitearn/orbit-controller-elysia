@@ -26,7 +26,7 @@ import {
   wait,
 } from "../../common/utils";
 
-const dbClient = new DatabaseClient(ENV.MONGODB, ENV.ORBIT_CONTROLLER);
+const dbClient = new DatabaseClient(ENV.DATABASE_URL, ENV.ORBIT_CONTROLLER);
 const baseURL = (ENV.IS_PROD ? ENV.BE_PROD_URL : ENV.BE_DEV_URL) + "/api";
 const httpsAgent = ENV.IS_PROD
   ? undefined

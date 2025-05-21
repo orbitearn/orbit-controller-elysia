@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/backend/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL_PRISMA")
+}
+
+type AppDataAssetPrices {
+  asset String
+  /// TODO: migrate as actual type is Json due to: Multiple data types found: Float: 66.4%, Int: 33.6% out of 2994 sampled entries
+  price Float
+}
+
+type ServerLogsEntries {
+  cause     ServerLogsEntriesCause?
+  level     String
+  message   String?
+  timestamp String
+}
+
+type ServerLogsEntriesCause {
+  code    String
+  errno   Int
+  syscall String
+}
+
+model app_data {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int                  @map("__v")
+  assetPrices AppDataAssetPrices[]
+  counter     Int                  @unique(map: "counter_1")
+  timestamp   DateTime             @unique(map: "timestamp_1") @db.Date
+}
+
+model server_logs {
+  id         String              @id @default(auto()) @map("_id") @db.ObjectId
+  v          Int                 @map("__v")
+  entries    ServerLogsEntries[]
+  rawContent String
+  recordId   String
+  source     String
+  timestamp  DateTime            @db.Date
+
+  @@index([recordId], map: "recordId_1")
+}
+
+model user_data {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  address   String
+  amount    Float
+  asset     String
+  timestamp DateTime @db.Date
+
+  @@index([timestamp], map: "timestamp_1")
+  @@index([address, timestamp], map: "address_1_timestamp_1")
+}
