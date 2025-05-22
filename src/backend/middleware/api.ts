@@ -1,9 +1,10 @@
-import { AppRequest, UserRequest } from "../db/requests";
+import { AppDataService } from "../db/app-data.service";
+import { UserDataService } from "../db/user-data.service";
 import { readFile } from "fs/promises";
 import { ChainConfig } from "../../common/interfaces";
 import { CHAIN_ID } from "../constants";
 import { getCwQueryHelpers } from "../../common/account/cw-helpers";
-import { IAppDataDocument, IUserDataDocument } from "../db/types";
+import { AppDataItem, UserDataItem } from "../db/types";
 import { ENCODING, PATH_TO_CONFIG_JSON } from "../services/utils";
 import { getAggregatedAssetList, updateUserData, UserAsset } from "../helpers";
 import {
@@ -25,13 +26,13 @@ export async function getAverageEntryPrice(
   let averagePriceList: [string, number][] = [];
 
   try {
-    const userData = await UserRequest.getDataInTimestampRange(
+    const userData = await UserDataService.getDataInTimestampRange(
       address,
       from,
       to,
       excludeAsset
     );
-    const appData = await AppRequest.getDataInTimestampRange(from, to);
+    const appData = await AppDataService.getDataInTimestampRange(from, to);
 
     averagePriceList = calcAverageEntryPriceList(appData, userData);
   } catch (_) {}
@@ -48,13 +49,13 @@ export async function getProfit(
   let profitList: [string, number][] = [];
 
   try {
-    const userData = await UserRequest.getDataInTimestampRange(
+    const userData = await UserDataService.getDataInTimestampRange(
       address,
       from,
       to,
       excludeAsset
     );
-    const appData = await AppRequest.getDataInTimestampRange(from, to);
+    const appData = await AppDataService.getDataInTimestampRange(from, to);
 
     profitList = calcProfit(appData, userData);
   } catch (_) {}
@@ -64,11 +65,11 @@ export async function getProfit(
 
 export async function getUserFirstData(
   address: string
-): Promise<IUserDataDocument | null> {
-  let userFirstData: IUserDataDocument | null = null;
+): Promise<UserDataItem | null> {
+  let userFirstData: UserDataItem | null = null;
 
   try {
-    userFirstData = await UserRequest.getFirstData(address);
+    userFirstData = await UserDataService.getFirstData(address);
   } catch (_) {}
 
   return userFirstData;
@@ -95,7 +96,7 @@ export async function getApr(
     const { bank } = await getCwQueryHelpers(CHAIN_ID, RPC);
     const config = await bank.cwQueryConfig();
 
-    const appData = await AppRequest.getDataInTimestampRange(from, to);
+    const appData = await AppDataService.getDataInTimestampRange(from, to);
 
     aprList = calcApr(config.ausdc, appData, period);
   } catch (_) {}
@@ -106,11 +107,11 @@ export async function getApr(
 export async function getAppDataInTimestampRange(
   from: number,
   to: number
-): Promise<IAppDataDocument[]> {
-  let appData: IAppDataDocument[] = [];
+): Promise<AppDataItem[]> {
+  let appData: AppDataItem[] = [];
 
   try {
-    appData = await AppRequest.getDataInTimestampRange(from, to);
+    appData = await AppDataService.getDataInTimestampRange(from, to);
   } catch (_) {}
 
   return appData;
@@ -122,10 +123,10 @@ export async function getUserDataInTimestampRange(
   to: number,
   period: number
 ): Promise<UserAsset[]> {
-  let userData: IUserDataDocument[] = [];
+  let userData: UserDataItem[] = [];
 
   try {
-    userData = await UserRequest.getDataInTimestampRange(address, from, to);
+    userData = await UserDataService.getDataInTimestampRange(address, from, to);
   } catch (_) {}
 
   return getAggregatedAssetList(userData, period);

@@ -1048,7 +1048,7 @@ export namespace Prisma {
     scalars: {
       asset: string
       /**
-       * TODO: migrate as actula type is Json due to: Multiple data types found: Float: 66.4%, Int: 33.6% out of 2994 sampled entries
+       * TODO: migrate as actual type is Json due to: Multiple data types found: Float: 66.4%, Int: 33.6% out of 2994 sampled entries
        */
       price: number
     }
@@ -1241,32 +1241,27 @@ export namespace Prisma {
   }
 
   export type App_dataAvgAggregateOutputType = {
-    v: number | null
     counter: number | null
   }
 
   export type App_dataSumAggregateOutputType = {
-    v: number | null
     counter: number | null
   }
 
   export type App_dataMinAggregateOutputType = {
     id: string | null
-    v: number | null
     counter: number | null
     timestamp: Date | null
   }
 
   export type App_dataMaxAggregateOutputType = {
     id: string | null
-    v: number | null
     counter: number | null
     timestamp: Date | null
   }
 
   export type App_dataCountAggregateOutputType = {
     id: number
-    v: number
     counter: number
     timestamp: number
     _all: number
@@ -1274,32 +1269,27 @@ export namespace Prisma {
 
 
   export type App_dataAvgAggregateInputType = {
-    v?: true
     counter?: true
   }
 
   export type App_dataSumAggregateInputType = {
-    v?: true
     counter?: true
   }
 
   export type App_dataMinAggregateInputType = {
     id?: true
-    v?: true
     counter?: true
     timestamp?: true
   }
 
   export type App_dataMaxAggregateInputType = {
     id?: true
-    v?: true
     counter?: true
     timestamp?: true
   }
 
   export type App_dataCountAggregateInputType = {
     id?: true
-    v?: true
     counter?: true
     timestamp?: true
     _all?: true
@@ -1393,7 +1383,6 @@ export namespace Prisma {
 
   export type App_dataGroupByOutputType = {
     id: string
-    v: number
     counter: number
     timestamp: Date
     _count: App_dataCountAggregateOutputType | null
@@ -1419,7 +1408,6 @@ export namespace Prisma {
 
   export type app_dataSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    v?: boolean
     assetPrices?: boolean | AppDataAssetPricesDefaultArgs<ExtArgs>
     counter?: boolean
     timestamp?: boolean
@@ -1429,12 +1417,11 @@ export namespace Prisma {
 
   export type app_dataSelectScalar = {
     id?: boolean
-    v?: boolean
     counter?: boolean
     timestamp?: boolean
   }
 
-  export type app_dataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "v" | "assetPrices" | "counter" | "timestamp", ExtArgs["result"]["app_data"]>
+  export type app_dataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "assetPrices" | "counter" | "timestamp", ExtArgs["result"]["app_data"]>
   export type app_dataInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $app_dataPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1442,7 +1429,6 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      v: number
       counter: number
       timestamp: Date
     }, ExtArgs["result"]["app_data"]>
@@ -1840,7 +1826,6 @@ export namespace Prisma {
    */
   interface app_dataFieldRefs {
     readonly id: FieldRef<"app_data", 'String'>
-    readonly v: FieldRef<"app_data", 'Int'>
     readonly counter: FieldRef<"app_data", 'Int'>
     readonly timestamp: FieldRef<"app_data", 'DateTime'>
   }
@@ -2237,23 +2222,12 @@ export namespace Prisma {
 
   export type AggregateServer_logs = {
     _count: Server_logsCountAggregateOutputType | null
-    _avg: Server_logsAvgAggregateOutputType | null
-    _sum: Server_logsSumAggregateOutputType | null
     _min: Server_logsMinAggregateOutputType | null
     _max: Server_logsMaxAggregateOutputType | null
   }
 
-  export type Server_logsAvgAggregateOutputType = {
-    v: number | null
-  }
-
-  export type Server_logsSumAggregateOutputType = {
-    v: number | null
-  }
-
   export type Server_logsMinAggregateOutputType = {
     id: string | null
-    v: number | null
     rawContent: string | null
     recordId: string | null
     source: string | null
@@ -2262,7 +2236,6 @@ export namespace Prisma {
 
   export type Server_logsMaxAggregateOutputType = {
     id: string | null
-    v: number | null
     rawContent: string | null
     recordId: string | null
     source: string | null
@@ -2271,7 +2244,6 @@ export namespace Prisma {
 
   export type Server_logsCountAggregateOutputType = {
     id: number
-    v: number
     rawContent: number
     recordId: number
     source: number
@@ -2280,17 +2252,8 @@ export namespace Prisma {
   }
 
 
-  export type Server_logsAvgAggregateInputType = {
-    v?: true
-  }
-
-  export type Server_logsSumAggregateInputType = {
-    v?: true
-  }
-
   export type Server_logsMinAggregateInputType = {
     id?: true
-    v?: true
     rawContent?: true
     recordId?: true
     source?: true
@@ -2299,7 +2262,6 @@ export namespace Prisma {
 
   export type Server_logsMaxAggregateInputType = {
     id?: true
-    v?: true
     rawContent?: true
     recordId?: true
     source?: true
@@ -2308,7 +2270,6 @@ export namespace Prisma {
 
   export type Server_logsCountAggregateInputType = {
     id?: true
-    v?: true
     rawContent?: true
     recordId?: true
     source?: true
@@ -2354,18 +2315,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: Server_logsAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: Server_logsSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: Server_logsMinAggregateInputType
@@ -2396,22 +2345,17 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: Server_logsCountAggregateInputType | true
-    _avg?: Server_logsAvgAggregateInputType
-    _sum?: Server_logsSumAggregateInputType
     _min?: Server_logsMinAggregateInputType
     _max?: Server_logsMaxAggregateInputType
   }
 
   export type Server_logsGroupByOutputType = {
     id: string
-    v: number
     rawContent: string
     recordId: string
     source: string
     timestamp: Date
     _count: Server_logsCountAggregateOutputType | null
-    _avg: Server_logsAvgAggregateOutputType | null
-    _sum: Server_logsSumAggregateOutputType | null
     _min: Server_logsMinAggregateOutputType | null
     _max: Server_logsMaxAggregateOutputType | null
   }
@@ -2432,7 +2376,6 @@ export namespace Prisma {
 
   export type server_logsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    v?: boolean
     entries?: boolean | ServerLogsEntriesDefaultArgs<ExtArgs>
     rawContent?: boolean
     recordId?: boolean
@@ -2444,14 +2387,13 @@ export namespace Prisma {
 
   export type server_logsSelectScalar = {
     id?: boolean
-    v?: boolean
     rawContent?: boolean
     recordId?: boolean
     source?: boolean
     timestamp?: boolean
   }
 
-  export type server_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "v" | "entries" | "rawContent" | "recordId" | "source" | "timestamp", ExtArgs["result"]["server_logs"]>
+  export type server_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "entries" | "rawContent" | "recordId" | "source" | "timestamp", ExtArgs["result"]["server_logs"]>
   export type server_logsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $server_logsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2459,8 +2401,10 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      v: number
       rawContent: string
+      /**
+       * TODO: may require migration as recordId is unique now
+       */
       recordId: string
       source: string
       timestamp: Date
@@ -2859,7 +2803,6 @@ export namespace Prisma {
    */
   interface server_logsFieldRefs {
     readonly id: FieldRef<"server_logs", 'String'>
-    readonly v: FieldRef<"server_logs", 'Int'>
     readonly rawContent: FieldRef<"server_logs", 'String'>
     readonly recordId: FieldRef<"server_logs", 'String'>
     readonly source: FieldRef<"server_logs", 'String'>
@@ -3265,18 +3208,15 @@ export namespace Prisma {
   }
 
   export type User_dataAvgAggregateOutputType = {
-    v: number | null
     amount: number | null
   }
 
   export type User_dataSumAggregateOutputType = {
-    v: number | null
     amount: number | null
   }
 
   export type User_dataMinAggregateOutputType = {
     id: string | null
-    v: number | null
     address: string | null
     amount: number | null
     asset: string | null
@@ -3285,7 +3225,6 @@ export namespace Prisma {
 
   export type User_dataMaxAggregateOutputType = {
     id: string | null
-    v: number | null
     address: string | null
     amount: number | null
     asset: string | null
@@ -3294,7 +3233,6 @@ export namespace Prisma {
 
   export type User_dataCountAggregateOutputType = {
     id: number
-    v: number
     address: number
     amount: number
     asset: number
@@ -3304,18 +3242,15 @@ export namespace Prisma {
 
 
   export type User_dataAvgAggregateInputType = {
-    v?: true
     amount?: true
   }
 
   export type User_dataSumAggregateInputType = {
-    v?: true
     amount?: true
   }
 
   export type User_dataMinAggregateInputType = {
     id?: true
-    v?: true
     address?: true
     amount?: true
     asset?: true
@@ -3324,7 +3259,6 @@ export namespace Prisma {
 
   export type User_dataMaxAggregateInputType = {
     id?: true
-    v?: true
     address?: true
     amount?: true
     asset?: true
@@ -3333,7 +3267,6 @@ export namespace Prisma {
 
   export type User_dataCountAggregateInputType = {
     id?: true
-    v?: true
     address?: true
     amount?: true
     asset?: true
@@ -3429,7 +3362,6 @@ export namespace Prisma {
 
   export type User_dataGroupByOutputType = {
     id: string
-    v: number
     address: string
     amount: number
     asset: string
@@ -3457,7 +3389,6 @@ export namespace Prisma {
 
   export type user_dataSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    v?: boolean
     address?: boolean
     amount?: boolean
     asset?: boolean
@@ -3468,21 +3399,19 @@ export namespace Prisma {
 
   export type user_dataSelectScalar = {
     id?: boolean
-    v?: boolean
     address?: boolean
     amount?: boolean
     asset?: boolean
     timestamp?: boolean
   }
 
-  export type user_dataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "v" | "address" | "amount" | "asset" | "timestamp", ExtArgs["result"]["user_data"]>
+  export type user_dataOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "address" | "amount" | "asset" | "timestamp", ExtArgs["result"]["user_data"]>
 
   export type $user_dataPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "user_data"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      v: number
       address: string
       amount: number
       asset: string
@@ -3880,7 +3809,6 @@ export namespace Prisma {
    */
   interface user_dataFieldRefs {
     readonly id: FieldRef<"user_data", 'String'>
-    readonly v: FieldRef<"user_data", 'Int'>
     readonly address: FieldRef<"user_data", 'String'>
     readonly amount: FieldRef<"user_data", 'Float'>
     readonly asset: FieldRef<"user_data", 'String'>
@@ -4239,7 +4167,6 @@ export namespace Prisma {
 
   export const App_dataScalarFieldEnum: {
     id: 'id',
-    v: 'v',
     counter: 'counter',
     timestamp: 'timestamp'
   };
@@ -4249,7 +4176,6 @@ export namespace Prisma {
 
   export const Server_logsScalarFieldEnum: {
     id: 'id',
-    v: 'v',
     rawContent: 'rawContent',
     recordId: 'recordId',
     source: 'source',
@@ -4261,7 +4187,6 @@ export namespace Prisma {
 
   export const User_dataScalarFieldEnum: {
     id: 'id',
-    v: 'v',
     address: 'address',
     amount: 'amount',
     asset: 'asset',
@@ -4356,7 +4281,6 @@ export namespace Prisma {
     OR?: app_dataWhereInput[]
     NOT?: app_dataWhereInput | app_dataWhereInput[]
     id?: StringFilter<"app_data"> | string
-    v?: IntFilter<"app_data"> | number
     assetPrices?: AppDataAssetPricesCompositeListFilter | AppDataAssetPricesObjectEqualityInput[]
     counter?: IntFilter<"app_data"> | number
     timestamp?: DateTimeFilter<"app_data"> | Date | string
@@ -4364,7 +4288,6 @@ export namespace Prisma {
 
   export type app_dataOrderByWithRelationInput = {
     id?: SortOrder
-    v?: SortOrder
     assetPrices?: AppDataAssetPricesOrderByCompositeAggregateInput
     counter?: SortOrder
     timestamp?: SortOrder
@@ -4377,13 +4300,11 @@ export namespace Prisma {
     AND?: app_dataWhereInput | app_dataWhereInput[]
     OR?: app_dataWhereInput[]
     NOT?: app_dataWhereInput | app_dataWhereInput[]
-    v?: IntFilter<"app_data"> | number
     assetPrices?: AppDataAssetPricesCompositeListFilter | AppDataAssetPricesObjectEqualityInput[]
   }, "id" | "counter" | "timestamp">
 
   export type app_dataOrderByWithAggregationInput = {
     id?: SortOrder
-    v?: SortOrder
     counter?: SortOrder
     timestamp?: SortOrder
     _count?: app_dataCountOrderByAggregateInput
@@ -4398,7 +4319,6 @@ export namespace Prisma {
     OR?: app_dataScalarWhereWithAggregatesInput[]
     NOT?: app_dataScalarWhereWithAggregatesInput | app_dataScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"app_data"> | string
-    v?: IntWithAggregatesFilter<"app_data"> | number
     counter?: IntWithAggregatesFilter<"app_data"> | number
     timestamp?: DateTimeWithAggregatesFilter<"app_data"> | Date | string
   }
@@ -4408,7 +4328,6 @@ export namespace Prisma {
     OR?: server_logsWhereInput[]
     NOT?: server_logsWhereInput | server_logsWhereInput[]
     id?: StringFilter<"server_logs"> | string
-    v?: IntFilter<"server_logs"> | number
     entries?: ServerLogsEntriesCompositeListFilter | ServerLogsEntriesObjectEqualityInput[]
     rawContent?: StringFilter<"server_logs"> | string
     recordId?: StringFilter<"server_logs"> | string
@@ -4418,7 +4337,6 @@ export namespace Prisma {
 
   export type server_logsOrderByWithRelationInput = {
     id?: SortOrder
-    v?: SortOrder
     entries?: ServerLogsEntriesOrderByCompositeAggregateInput
     rawContent?: SortOrder
     recordId?: SortOrder
@@ -4428,29 +4346,25 @@ export namespace Prisma {
 
   export type server_logsWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    recordId?: string
     AND?: server_logsWhereInput | server_logsWhereInput[]
     OR?: server_logsWhereInput[]
     NOT?: server_logsWhereInput | server_logsWhereInput[]
-    v?: IntFilter<"server_logs"> | number
     entries?: ServerLogsEntriesCompositeListFilter | ServerLogsEntriesObjectEqualityInput[]
     rawContent?: StringFilter<"server_logs"> | string
-    recordId?: StringFilter<"server_logs"> | string
     source?: StringFilter<"server_logs"> | string
     timestamp?: DateTimeFilter<"server_logs"> | Date | string
-  }, "id">
+  }, "id" | "recordId">
 
   export type server_logsOrderByWithAggregationInput = {
     id?: SortOrder
-    v?: SortOrder
     rawContent?: SortOrder
     recordId?: SortOrder
     source?: SortOrder
     timestamp?: SortOrder
     _count?: server_logsCountOrderByAggregateInput
-    _avg?: server_logsAvgOrderByAggregateInput
     _max?: server_logsMaxOrderByAggregateInput
     _min?: server_logsMinOrderByAggregateInput
-    _sum?: server_logsSumOrderByAggregateInput
   }
 
   export type server_logsScalarWhereWithAggregatesInput = {
@@ -4458,7 +4372,6 @@ export namespace Prisma {
     OR?: server_logsScalarWhereWithAggregatesInput[]
     NOT?: server_logsScalarWhereWithAggregatesInput | server_logsScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"server_logs"> | string
-    v?: IntWithAggregatesFilter<"server_logs"> | number
     rawContent?: StringWithAggregatesFilter<"server_logs"> | string
     recordId?: StringWithAggregatesFilter<"server_logs"> | string
     source?: StringWithAggregatesFilter<"server_logs"> | string
@@ -4470,7 +4383,6 @@ export namespace Prisma {
     OR?: user_dataWhereInput[]
     NOT?: user_dataWhereInput | user_dataWhereInput[]
     id?: StringFilter<"user_data"> | string
-    v?: IntFilter<"user_data"> | number
     address?: StringFilter<"user_data"> | string
     amount?: FloatFilter<"user_data"> | number
     asset?: StringFilter<"user_data"> | string
@@ -4479,7 +4391,6 @@ export namespace Prisma {
 
   export type user_dataOrderByWithRelationInput = {
     id?: SortOrder
-    v?: SortOrder
     address?: SortOrder
     amount?: SortOrder
     asset?: SortOrder
@@ -4491,7 +4402,6 @@ export namespace Prisma {
     AND?: user_dataWhereInput | user_dataWhereInput[]
     OR?: user_dataWhereInput[]
     NOT?: user_dataWhereInput | user_dataWhereInput[]
-    v?: IntFilter<"user_data"> | number
     address?: StringFilter<"user_data"> | string
     amount?: FloatFilter<"user_data"> | number
     asset?: StringFilter<"user_data"> | string
@@ -4500,7 +4410,6 @@ export namespace Prisma {
 
   export type user_dataOrderByWithAggregationInput = {
     id?: SortOrder
-    v?: SortOrder
     address?: SortOrder
     amount?: SortOrder
     asset?: SortOrder
@@ -4517,7 +4426,6 @@ export namespace Prisma {
     OR?: user_dataScalarWhereWithAggregatesInput[]
     NOT?: user_dataScalarWhereWithAggregatesInput | user_dataScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"user_data"> | string
-    v?: IntWithAggregatesFilter<"user_data"> | number
     address?: StringWithAggregatesFilter<"user_data"> | string
     amount?: FloatWithAggregatesFilter<"user_data"> | number
     asset?: StringWithAggregatesFilter<"user_data"> | string
@@ -4526,7 +4434,6 @@ export namespace Prisma {
 
   export type app_dataCreateInput = {
     id?: string
-    v: number
     assetPrices?: XOR<AppDataAssetPricesListCreateEnvelopeInput, AppDataAssetPricesCreateInput> | AppDataAssetPricesCreateInput[]
     counter: number
     timestamp: Date | string
@@ -4534,21 +4441,18 @@ export namespace Prisma {
 
   export type app_dataUncheckedCreateInput = {
     id?: string
-    v: number
     assetPrices?: XOR<AppDataAssetPricesListCreateEnvelopeInput, AppDataAssetPricesCreateInput> | AppDataAssetPricesCreateInput[]
     counter: number
     timestamp: Date | string
   }
 
   export type app_dataUpdateInput = {
-    v?: IntFieldUpdateOperationsInput | number
     assetPrices?: XOR<AppDataAssetPricesListUpdateEnvelopeInput, AppDataAssetPricesCreateInput> | AppDataAssetPricesCreateInput[]
     counter?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type app_dataUncheckedUpdateInput = {
-    v?: IntFieldUpdateOperationsInput | number
     assetPrices?: XOR<AppDataAssetPricesListUpdateEnvelopeInput, AppDataAssetPricesCreateInput> | AppDataAssetPricesCreateInput[]
     counter?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4556,21 +4460,18 @@ export namespace Prisma {
 
   export type app_dataCreateManyInput = {
     id?: string
-    v: number
     assetPrices?: XOR<AppDataAssetPricesListCreateEnvelopeInput, AppDataAssetPricesCreateInput> | AppDataAssetPricesCreateInput[]
     counter: number
     timestamp: Date | string
   }
 
   export type app_dataUpdateManyMutationInput = {
-    v?: IntFieldUpdateOperationsInput | number
     assetPrices?: XOR<AppDataAssetPricesListUpdateEnvelopeInput, AppDataAssetPricesCreateInput> | AppDataAssetPricesCreateInput[]
     counter?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type app_dataUncheckedUpdateManyInput = {
-    v?: IntFieldUpdateOperationsInput | number
     assetPrices?: XOR<AppDataAssetPricesListUpdateEnvelopeInput, AppDataAssetPricesCreateInput> | AppDataAssetPricesCreateInput[]
     counter?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4578,7 +4479,6 @@ export namespace Prisma {
 
   export type server_logsCreateInput = {
     id?: string
-    v: number
     entries?: XOR<ServerLogsEntriesListCreateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent: string
     recordId: string
@@ -4588,7 +4488,6 @@ export namespace Prisma {
 
   export type server_logsUncheckedCreateInput = {
     id?: string
-    v: number
     entries?: XOR<ServerLogsEntriesListCreateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent: string
     recordId: string
@@ -4597,7 +4496,6 @@ export namespace Prisma {
   }
 
   export type server_logsUpdateInput = {
-    v?: IntFieldUpdateOperationsInput | number
     entries?: XOR<ServerLogsEntriesListUpdateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent?: StringFieldUpdateOperationsInput | string
     recordId?: StringFieldUpdateOperationsInput | string
@@ -4606,7 +4504,6 @@ export namespace Prisma {
   }
 
   export type server_logsUncheckedUpdateInput = {
-    v?: IntFieldUpdateOperationsInput | number
     entries?: XOR<ServerLogsEntriesListUpdateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent?: StringFieldUpdateOperationsInput | string
     recordId?: StringFieldUpdateOperationsInput | string
@@ -4616,7 +4513,6 @@ export namespace Prisma {
 
   export type server_logsCreateManyInput = {
     id?: string
-    v: number
     entries?: XOR<ServerLogsEntriesListCreateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent: string
     recordId: string
@@ -4625,7 +4521,6 @@ export namespace Prisma {
   }
 
   export type server_logsUpdateManyMutationInput = {
-    v?: IntFieldUpdateOperationsInput | number
     entries?: XOR<ServerLogsEntriesListUpdateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent?: StringFieldUpdateOperationsInput | string
     recordId?: StringFieldUpdateOperationsInput | string
@@ -4634,7 +4529,6 @@ export namespace Prisma {
   }
 
   export type server_logsUncheckedUpdateManyInput = {
-    v?: IntFieldUpdateOperationsInput | number
     entries?: XOR<ServerLogsEntriesListUpdateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent?: StringFieldUpdateOperationsInput | string
     recordId?: StringFieldUpdateOperationsInput | string
@@ -4644,7 +4538,6 @@ export namespace Prisma {
 
   export type user_dataCreateInput = {
     id?: string
-    v: number
     address: string
     amount: number
     asset: string
@@ -4653,7 +4546,6 @@ export namespace Prisma {
 
   export type user_dataUncheckedCreateInput = {
     id?: string
-    v: number
     address: string
     amount: number
     asset: string
@@ -4661,7 +4553,6 @@ export namespace Prisma {
   }
 
   export type user_dataUpdateInput = {
-    v?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     asset?: StringFieldUpdateOperationsInput | string
@@ -4669,7 +4560,6 @@ export namespace Prisma {
   }
 
   export type user_dataUncheckedUpdateInput = {
-    v?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     asset?: StringFieldUpdateOperationsInput | string
@@ -4678,7 +4568,6 @@ export namespace Prisma {
 
   export type user_dataCreateManyInput = {
     id?: string
-    v: number
     address: string
     amount: number
     asset: string
@@ -4686,7 +4575,6 @@ export namespace Prisma {
   }
 
   export type user_dataUpdateManyMutationInput = {
-    v?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     asset?: StringFieldUpdateOperationsInput | string
@@ -4694,7 +4582,6 @@ export namespace Prisma {
   }
 
   export type user_dataUncheckedUpdateManyInput = {
-    v?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     asset?: StringFieldUpdateOperationsInput | string
@@ -4716,17 +4603,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type AppDataAssetPricesCompositeListFilter = {
     equals?: AppDataAssetPricesObjectEqualityInput[]
     every?: AppDataAssetPricesWhereInput
@@ -4739,6 +4615,17 @@ export namespace Prisma {
   export type AppDataAssetPricesObjectEqualityInput = {
     asset: string
     price: number
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -4758,32 +4645,27 @@ export namespace Prisma {
 
   export type app_dataCountOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     counter?: SortOrder
     timestamp?: SortOrder
   }
 
   export type app_dataAvgOrderByAggregateInput = {
-    v?: SortOrder
     counter?: SortOrder
   }
 
   export type app_dataMaxOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     counter?: SortOrder
     timestamp?: SortOrder
   }
 
   export type app_dataMinOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     counter?: SortOrder
     timestamp?: SortOrder
   }
 
   export type app_dataSumOrderByAggregateInput = {
-    v?: SortOrder
     counter?: SortOrder
   }
 
@@ -4857,20 +4739,14 @@ export namespace Prisma {
 
   export type server_logsCountOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     rawContent?: SortOrder
     recordId?: SortOrder
     source?: SortOrder
     timestamp?: SortOrder
   }
 
-  export type server_logsAvgOrderByAggregateInput = {
-    v?: SortOrder
-  }
-
   export type server_logsMaxOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     rawContent?: SortOrder
     recordId?: SortOrder
     source?: SortOrder
@@ -4879,15 +4755,10 @@ export namespace Prisma {
 
   export type server_logsMinOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     rawContent?: SortOrder
     recordId?: SortOrder
     source?: SortOrder
     timestamp?: SortOrder
-  }
-
-  export type server_logsSumOrderByAggregateInput = {
-    v?: SortOrder
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -4903,7 +4774,6 @@ export namespace Prisma {
 
   export type user_dataCountOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     address?: SortOrder
     amount?: SortOrder
     asset?: SortOrder
@@ -4911,13 +4781,11 @@ export namespace Prisma {
   }
 
   export type user_dataAvgOrderByAggregateInput = {
-    v?: SortOrder
     amount?: SortOrder
   }
 
   export type user_dataMaxOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     address?: SortOrder
     amount?: SortOrder
     asset?: SortOrder
@@ -4926,7 +4794,6 @@ export namespace Prisma {
 
   export type user_dataMinOrderByAggregateInput = {
     id?: SortOrder
-    v?: SortOrder
     address?: SortOrder
     amount?: SortOrder
     asset?: SortOrder
@@ -4934,7 +4801,6 @@ export namespace Prisma {
   }
 
   export type user_dataSumOrderByAggregateInput = {
-    v?: SortOrder
     amount?: SortOrder
   }
 
@@ -4963,19 +4829,19 @@ export namespace Prisma {
     price: number
   }
 
+  export type AppDataAssetPricesListUpdateEnvelopeInput = {
+    set?: AppDataAssetPricesCreateInput | AppDataAssetPricesCreateInput[]
+    push?: AppDataAssetPricesCreateInput | AppDataAssetPricesCreateInput[]
+    updateMany?: AppDataAssetPricesUpdateManyInput
+    deleteMany?: AppDataAssetPricesDeleteManyInput
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type AppDataAssetPricesListUpdateEnvelopeInput = {
-    set?: AppDataAssetPricesCreateInput | AppDataAssetPricesCreateInput[]
-    push?: AppDataAssetPricesCreateInput | AppDataAssetPricesCreateInput[]
-    updateMany?: AppDataAssetPricesUpdateManyInput
-    deleteMany?: AppDataAssetPricesDeleteManyInput
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -5026,6 +4892,14 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type AppDataAssetPricesWhereInput = {
+    AND?: AppDataAssetPricesWhereInput | AppDataAssetPricesWhereInput[]
+    OR?: AppDataAssetPricesWhereInput[]
+    NOT?: AppDataAssetPricesWhereInput | AppDataAssetPricesWhereInput[]
+    asset?: StringFilter<"AppDataAssetPrices"> | string
+    price?: FloatFilter<"AppDataAssetPrices"> | number
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -5035,14 +4909,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
-  }
-
-  export type AppDataAssetPricesWhereInput = {
-    AND?: AppDataAssetPricesWhereInput | AppDataAssetPricesWhereInput[]
-    OR?: AppDataAssetPricesWhereInput[]
-    NOT?: AppDataAssetPricesWhereInput | AppDataAssetPricesWhereInput[]
-    asset?: StringFilter<"AppDataAssetPrices"> | string
-    price?: FloatFilter<"AppDataAssetPrices"> | number
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {

@@ -1,5 +1,5 @@
 import { AssetItem, UserInfoResponse } from "../../common/codegen/Bank.types";
-import { IAppDataSchema, IUserDataSchema } from "../db/types";
+import { AppDataItem, UserDataItem } from "../db/types";
 import { dateToTimestamp } from "../services/utils";
 import {
   DECIMAL_PLACES,
@@ -61,8 +61,8 @@ export function calcClaimAndSwapData(
 
 // average_entry_price = sum(amount_i * price_i) / sum(amount_i)
 export function calcAverageEntryPriceList(
-  appData: IAppDataSchema[],
-  userData: IUserDataSchema[]
+  appData: AppDataItem[],
+  userData: UserDataItem[]
 ): [string, number][] {
   const assetList: string[] = dedupVector(userData.map((x) => x.asset));
 
@@ -95,8 +95,8 @@ export function calcAverageEntryPriceList(
 
 // profit = sum(amount_i * (price - price_i))
 export function calcProfit(
-  appData: IAppDataSchema[],
-  userData: IUserDataSchema[]
+  appData: AppDataItem[],
+  userData: UserDataItem[]
 ): [string, number][] {
   const assetList: string[] = dedupVector(userData.map((x) => x.asset));
   const currentPriceList: [string, number][] =
@@ -129,7 +129,7 @@ export function calcProfit(
 // returns [apr, timestamp][]
 export function calcApr(
   ausdcDenom: string,
-  appData: IAppDataSchema[],
+  appData: AppDataItem[],
   period: number
 ): [number, number][] {
   if (appData.length < 2) {

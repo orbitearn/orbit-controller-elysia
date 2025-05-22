@@ -29,27 +29,23 @@ type ServerLogsEntriesCause {
 
 model app_data {
   id          String               @id @default(auto()) @map("_id") @db.ObjectId
-  v           Int                  @map("__v")
   assetPrices AppDataAssetPrices[]
   counter     Int                  @unique(map: "counter_1")
   timestamp   DateTime             @unique(map: "timestamp_1") @db.Date
 }
 
 model server_logs {
-  id         String              @id @default(auto()) @map("_id") @db.ObjectId
-  v          Int                 @map("__v")
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   entries    ServerLogsEntries[]
   rawContent String
-  recordId   String
+  /// TODO: may require migration as recordId is unique now
+  recordId   String   @unique
   source     String
   timestamp  DateTime            @db.Date
-
-  @@index([recordId], map: "recordId_1")
 }
 
 model user_data {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int      @map("__v")
   address   String
   amount    Float
   asset     String

@@ -115,14 +115,12 @@ Prisma.NullTypes = {
 
 exports.Prisma.App_dataScalarFieldEnum = {
   id: 'id',
-  v: 'v',
   counter: 'counter',
   timestamp: 'timestamp'
 };
 
 exports.Prisma.Server_logsScalarFieldEnum = {
   id: 'id',
-  v: 'v',
   rawContent: 'rawContent',
   recordId: 'recordId',
   source: 'source',
@@ -131,7 +129,6 @@ exports.Prisma.Server_logsScalarFieldEnum = {
 
 exports.Prisma.User_dataScalarFieldEnum = {
   id: 'id',
-  v: 'v',
   address: 'address',
   amount: 'amount',
   asset: 'asset',

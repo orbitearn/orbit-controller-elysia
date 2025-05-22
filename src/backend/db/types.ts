@@ -1,49 +1,32 @@
-import { Document, SchemaOptions } from "mongoose";
-
-export type AssetPrice = {
+export interface AssetPrice {
   asset: string;
   price: number;
-};
+}
 
-export type AssetAmount = {
+export interface AssetAmount {
   asset: string;
   amount: number;
-};
+}
 
-export type TimestampData = {
+export interface TimestampData {
   timestamp: Date | number;
   assetList: AssetAmount[];
-};
-
-export interface IAppDataSchema {
-  timestamp: Date;
-  counter: number;
-  assetPrices: AssetPrice[];
 }
-export interface IAppDataDocument extends IAppDataSchema, Document {}
 
-export interface IUserDataSchema {
-  asset: string;
+export interface AppDataItem {
+  timestamp: Date;
+  id: string;
+  counter: number;
+  assetPrices: {
+    asset: string;
+    price: number;
+  }[];
+}
+
+export interface UserDataItem {
   amount: number;
+  asset: string;
   timestamp: Date;
   address: string;
-}
-export interface IUserDataDocument extends IUserDataSchema, Document {}
-
-export interface ILogEntrySchema {
-  timestamp: Date;
-  source: string;
-  entries: any[];
-  rawContent: string;
-  // use a fixed ID to always update the same record
-  recordId: string;
-}
-export interface ILogEntryDocument extends ILogEntrySchema, Document {}
-
-export function getSchemaOptions(collection: string): SchemaOptions {
-  return {
-    minimize: true,
-    strict: true,
-    collection,
-  };
+  id: string;
 }

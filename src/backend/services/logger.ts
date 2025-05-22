@@ -1,7 +1,7 @@
 import * as winston from "winston";
 import * as path from "path";
 import * as fs from "fs-extra";
-import { LogWatcher } from "../db/requests";
+import { LogWatcher } from "./watcher";
 import { rootPath } from "../envs";
 import { l } from "../../common/utils";
 

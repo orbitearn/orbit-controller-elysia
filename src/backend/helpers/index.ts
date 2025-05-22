@@ -1,15 +1,16 @@
 import { getCwQueryHelpers } from "../../common/account/cw-helpers";
 import { AssetItem, Token } from "../../common/codegen/Bank.types";
 import { TokenInfo } from "../../common/interfaces";
-import { AppRequest, UserRequest } from "../db/requests";
+import { AppDataService } from "../db/app-data.service";
+import { UserDataService } from "../db/user-data.service";
 import { dateToTimestamp, toDate } from "../services/utils";
 import * as math from "mathjs";
 import { BANK, DECIMALS_DEFAULT } from "../constants";
 import {
+  AppDataItem,
   AssetAmount,
-  IAppDataSchema,
-  IUserDataSchema,
   TimestampData,
+  UserDataItem,
 } from "../db/types";
 import {
   DECIMAL_PLACES,
@@ -65,19 +66,19 @@ export function getTokenSymbol(token: Token): string {
   return "native" in token ? token.native.denom : token.cw20.address;
 }
 
-interface UserDataListItem {
-  user: string;
-  userData: IUserDataSchema[];
-  appData: IAppDataSchema[];
-  dbAssets: AssetItem[][];
-}
-
 export async function updateUserData(
   chainId: string,
   rpc: string,
   userList: string[],
   bankAddress: string
 ): Promise<void> {
+  interface UserDataListItem {
+    user: string;
+    userData: UserDataItem[];
+    appData: AppDataItem[];
+    dbAssets: AssetItem[][];
+  }
+
   let addressAndDataList: [string, TimestampData[]][] = [];
 
   // get user data from the contract
@@ -102,19 +103,22 @@ export async function updateUserData(
   let userDataList: UserDataListItem[] = [];
 
   for (const [user, { counter }] of userDistributionStateList) {
-    const [{ timestamp }] = await AppRequest.getDataInCounterRange(
+    const [{ timestamp }] = await AppDataService.getDataInCounterRange(
       counter,
       lastAppCounter || counter + 1
     );
     const dateFrom =
       dateToTimestamp(timestamp) ||
       dateTo - BANK.DISTRIBUTION_PERIOD * BANK.MAX_COUNTER_DIFF;
-    const userData = await UserRequest.getDataInTimestampRange(
+    const userData = await UserDataService.getDataInTimestampRange(
       user,
       dateFrom,
       dateTo
     );
-    const appData = await AppRequest.getDataInTimestampRange(dateFrom, dateTo);
+    const appData = await AppDataService.getDataInTimestampRange(
+      dateFrom,
+      dateTo
+    );
     const dbAssets =
       dbAssetsList.find(([address]) => address === user)?.[1] || [];
 
@@ -203,7 +207,7 @@ export async function updateUserData(
   }
 
   if (addressAndDataList.length) {
-    await UserRequest.addMultipleDataList(addressAndDataList);
+    await UserDataService.addMultipleDataList(addressAndDataList);
     l("Prices are stored in DB");
   }
 }
@@ -235,7 +239,7 @@ export interface AssetSample {
 }
 
 export function getAggregatedAssetList(
-  userData: IUserDataSchema[],
+  userData: UserDataItem[],
   period: number
 ): UserAsset[] {
   const zero = numberFrom(0);

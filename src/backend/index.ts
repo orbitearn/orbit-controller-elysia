@@ -9,8 +9,6 @@ import { readFile } from "fs/promises";
 import * as h from "helmet";
 import { ChainConfig } from "../common/interfaces";
 import { getSigner } from "./account/signer";
-import { AppRequest } from "./db/requests";
-import { DatabaseClient } from "./db/client";
 import { BANK, CHAIN_ID } from "./constants";
 import { calcAusdcPrice, calcClaimAndSwapData } from "./helpers/math";
 import { AssetPrice } from "./db/types";
@@ -49,8 +47,7 @@ import {
   toDate,
 } from "./services/utils";
 import { rootPath, ENV } from "./envs";
-
-const dbClient = new DatabaseClient(ENV.DATABASE_URL, ENV.ORBIT_CONTROLLER);
+import { AppDataService } from "./db/app-data.service";
 
 const limiter = rateLimit({
   windowMs: 60 * MS_PER_SECOND, // 1 minute
@@ -203,8 +200,7 @@ https.createServer(options, app).listen(ENV.PORT, async () => {
   let scriptStartTimestamp: number = 0;
 
   try {
-    await dbClient.connect();
-    const timestamp = (await AppRequest.getDataByLastCounter())?.timestamp;
+    const timestamp = (await AppDataService.getDataByLastCounter())?.timestamp;
 
     if (!timestamp) {
       throw new Error();
@@ -240,15 +236,6 @@ https.createServer(options, app).listen(ENV.PORT, async () => {
   while (true) {
     // to limit rpc request frequency
     await wait(BANK.CYCLE_COOLDOWN * MS_PER_SECOND);
-
-    // check the connection and reconnect if it's required
-    if (!dbClient.isConnected()) {
-      try {
-        dbClient.connect();
-      } catch (error) {
-        le(error);
-      }
-    }
 
     let usersToUpdate: string[] = [];
     // check distribution date and user counters
@@ -351,7 +338,11 @@ https.createServer(options, app).listen(ENV.PORT, async () => {
         ];
 
         try {
-          await AppRequest.addDataItem(nextUpdateDate, counter, assetPrices);
+          await AppDataService.addDataItem(
+            nextUpdateDate,
+            counter,
+            assetPrices
+          );
           le("Prices are stored in DB");
         } catch (error) {
           le(error);
@@ -365,11 +356,4 @@ https.createServer(options, app).listen(ENV.PORT, async () => {
 
     nextUpdateDate += BANK.DISTRIBUTION_PERIOD;
   }
-});
-
-// Handle graceful shutdown
-process.on("SIGTERM", async () => {
-  logger.info("SIGTERM signal received");
-  await dbClient.disconnect();
-  process.exit(0);
 });
