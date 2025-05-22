@@ -17,10 +17,7 @@ export interface AppDataItem {
   timestamp: Date;
   id: string;
   counter: number;
-  assetPrices: {
-    asset: string;
-    price: number;
-  }[];
+  assetPrices: AssetPrice[];
 }
 
 export interface UserDataItem {

@@ -48,3 +48,11 @@ export const ROUTE = {
 
   UPDATE_USER_ASSETS: "/update-user-assets",
 };
+
+export const PERIOD = {
+  none: 0,
+  day: 24 * 3_600,
+  week: 7 * 24 * 3_600,
+  month: 30 * 24 * 3_600,
+  year: 365 * 24 * 3_600,
+};

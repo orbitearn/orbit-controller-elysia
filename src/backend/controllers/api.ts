@@ -1,134 +1,157 @@
-import { Request, Response } from "express";
+import { readFile } from "fs-extra";
+import { ChainConfig } from "../../common/interfaces";
+import { ENCODING, PATH_TO_CONFIG_JSON } from "../services/utils";
 import {
-  getAverageEntryPrice as _getAverageEntryPrice,
-  getProfit as _getProfit,
-  updateUserAssets as _updateUserAssets,
-  getUserFirstData as _getUserFirstData,
-  getApr as _getApr,
-  getAppDataInTimestampRange as _getAppDataInTimestampRange,
-  getUserDataInTimestampRange as _getUserDataInTimestampRange,
-} from "../middleware/api";
+  getChainOptionById,
+  getContractByLabel,
+} from "../../common/config/config-utils";
+import { CHAIN_ID } from "../constants";
+import { getCwQueryHelpers } from "../../common/account/cw-helpers";
+import { AppDataService } from "../db/app-data.service";
+import {
+  calcApr,
+  calcAverageEntryPriceList,
+  calcProfit,
+} from "../helpers/math";
+import { AppDataItem, UserDataItem } from "../db/types";
+import { UserDataService } from "../db/user-data.service";
+import { getAggregatedAssetList, updateUserData, UserAsset } from "../helpers";
 
-export async function getTest(_req: Request, res: Response) {
-  res.status(200).json({ value: 42 });
+export async function getTest(): Promise<{
+  value: number;
+}> {
+  return { value: 42 };
 }
 
-export async function getAverageEntryPrice(req: Request, res: Response) {
-  const address = req.query.address as string;
-  const excludeAsset = req.query.excludeAsset as string;
-  const from = parseInt(req.query.from as string);
-  const to = parseInt(req.query.to as string);
+export async function getAverageEntryPrice(
+  address: string,
+  from: number,
+  to: number,
+  excludeAsset: string
+): Promise<[string, number][]> {
+  let averagePriceList: [string, number][] = [];
 
-  if (!address) {
-    res.status(400).json({ error: "Address parameter is required" });
-  } else if (!excludeAsset) {
-    res.status(400).json({ error: "excludeAsset parameter is required" });
-  } else if (isNaN(from) || isNaN(to)) {
-    res
-      .status(400)
-      .json({ error: "Valid 'from' and 'to' parameters are required" });
-  } else {
-    const data = await _getAverageEntryPrice(address, from, to, excludeAsset);
-    res.status(200).json(data);
-  }
+  try {
+    const userData = await UserDataService.getDataInTimestampRange(
+      address,
+      from,
+      to,
+      excludeAsset
+    );
+    const appData = await AppDataService.getDataInTimestampRange(from, to);
+
+    averagePriceList = calcAverageEntryPriceList(appData, userData);
+  } catch (_) {}
+
+  return averagePriceList;
 }
 
-export async function getProfit(req: Request, res: Response) {
-  const address = req.query.address as string;
-  const excludeAsset = req.query.excludeAsset as string;
-  const from = parseInt(req.query.from as string);
-  const to = parseInt(req.query.to as string);
+export async function getProfit(
+  address: string,
+  from: number,
+  to: number,
+  excludeAsset: string
+): Promise<[string, number][]> {
+  let profitList: [string, number][] = [];
 
-  if (!address) {
-    res.status(400).json({ error: "Address parameter is required" });
-  } else if (!excludeAsset) {
-    res.status(400).json({ error: "excludeAsset parameter is required" });
-  } else if (isNaN(from) || isNaN(to)) {
-    res
-      .status(400)
-      .json({ error: "Valid 'from' and 'to' parameters are required" });
-  } else {
-    const data = await _getProfit(address, from, to, excludeAsset);
-    res.status(200).json(data);
-  }
+  try {
+    const userData = await UserDataService.getDataInTimestampRange(
+      address,
+      from,
+      to,
+      excludeAsset
+    );
+    const appData = await AppDataService.getDataInTimestampRange(from, to);
+
+    profitList = calcProfit(appData, userData);
+  } catch (_) {}
+
+  return profitList;
 }
 
-export async function getUserFirstData(req: Request, res: Response) {
-  const address = req.query.address as string;
+export async function getUserFirstData(
+  address: string
+): Promise<UserDataItem | null> {
+  let userFirstData: UserDataItem | null = null;
 
-  if (!address) {
-    res.status(400).json({ error: "Address parameter is required" });
-  } else {
-    const data = await _getUserFirstData(address);
-    res.status(200).json(data);
-  }
+  try {
+    userFirstData = await UserDataService.getFirstData(address);
+  } catch (_) {}
+
+  return userFirstData;
 }
 
-export async function getApr(req: Request, res: Response) {
-  const from = parseInt(req.query.from as string);
-  const to = parseInt(req.query.to as string);
-  const period = {
-    day: 24 * 3_600,
-    week: 7 * 24 * 3_600,
-    month: 30 * 24 * 3_600,
-    year: 365 * 24 * 3_600,
-  }[req.query.period as string];
+export async function getApr(
+  from: number,
+  to: number,
+  period: number
+): Promise<[number, number][]> {
+  let aprList: [number, number][] = [];
 
-  if (isNaN(from) || isNaN(to) || typeof period === "undefined") {
-    res
-      .status(400)
-      .json({ error: "Valid 'from', 'to', 'period' parameters are required" });
-  } else {
-    const data = await _getApr(from, to, period);
-    res.status(200).json(data);
-  }
+  try {
+    const configJsonStr = await readFile(PATH_TO_CONFIG_JSON, {
+      encoding: ENCODING,
+    });
+    const CHAIN_CONFIG: ChainConfig = JSON.parse(configJsonStr);
+    const {
+      OPTION: {
+        RPC_LIST: [RPC],
+      },
+    } = getChainOptionById(CHAIN_CONFIG, CHAIN_ID);
+
+    const { bank } = await getCwQueryHelpers(CHAIN_ID, RPC);
+    const config = await bank.cwQueryConfig();
+
+    const appData = await AppDataService.getDataInTimestampRange(from, to);
+
+    aprList = calcApr(config.ausdc, appData, period);
+  } catch (_) {}
+
+  return aprList;
 }
 
-export async function getAppDataInTimestampRange(req: Request, res: Response) {
-  const from = parseInt(req.query.from as string);
-  const to = parseInt(req.query.to as string);
+export async function getAppDataInTimestampRange(
+  from: number,
+  to: number
+): Promise<AppDataItem[]> {
+  let appData: AppDataItem[] = [];
 
-  if (isNaN(from) || isNaN(to)) {
-    res
-      .status(400)
-      .json({ error: "Valid 'from' and 'to' parameters are required" });
-  } else {
-    const data = await _getAppDataInTimestampRange(from, to);
-    res.status(200).json(data);
-  }
+  try {
+    appData = await AppDataService.getDataInTimestampRange(from, to);
+  } catch (_) {}
+
+  return appData;
 }
 
-export async function getUserDataInTimestampRange(req: Request, res: Response) {
-  const address = req.query.address as string;
-  const from = parseInt(req.query.from as string);
-  const to = parseInt(req.query.to as string);
-  const period = {
-    none: 0,
-    day: 24 * 3_600,
-    week: 7 * 24 * 3_600,
-    month: 30 * 24 * 3_600,
-    year: 365 * 24 * 3_600,
-  }[req.query.period as string];
+export async function getUserDataInTimestampRange(
+  address: string,
+  from: number,
+  to: number,
+  period: number
+): Promise<UserAsset[]> {
+  let userData: UserDataItem[] = [];
 
-  if (!address) {
-    res.status(400).json({ error: "Address parameter is required" });
-  } else if (isNaN(from) || isNaN(to) || typeof period === "undefined") {
-    res
-      .status(400)
-      .json({ error: "Valid 'from', 'to', 'period' parameters are required" });
-  } else {
-    const data = await _getUserDataInTimestampRange(address, from, to, period);
-    res.status(200).json(data);
-  }
+  try {
+    userData = await UserDataService.getDataInTimestampRange(address, from, to);
+  } catch (_) {}
+
+  return getAggregatedAssetList(userData, period);
 }
 
-export async function updateUserAssets(req: Request, res: Response) {
-  const addressList = req.body.addressList as string[];
+export async function updateUserAssets(addressList: string[]): Promise<void> {
+  try {
+    const configJsonStr = await readFile(PATH_TO_CONFIG_JSON, {
+      encoding: ENCODING,
+    });
+    const CHAIN_CONFIG: ChainConfig = JSON.parse(configJsonStr);
+    const {
+      OPTION: {
+        RPC_LIST: [RPC],
+        CONTRACTS,
+      },
+    } = getChainOptionById(CHAIN_CONFIG, CHAIN_ID);
+    const bankAddress = getContractByLabel(CONTRACTS, "bank")?.ADDRESS || "";
 
-  if (!addressList || !addressList?.length) {
-    res.status(400).json({ error: "Address parameter is required" });
-  } else {
-    await _updateUserAssets(addressList);
-    res.status(200).json({});
-  }
+    await updateUserData(CHAIN_ID, RPC, addressList, bankAddress);
+  } catch (_) {}
 }

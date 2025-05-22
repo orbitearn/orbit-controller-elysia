@@ -9,9 +9,9 @@
   },
   "private": true,
   "scripts": {
-    "start": "bun run src/index.ts",
+    "start": "bun run src/backend/index2.ts",
     "test": "bun test",
-    "dev": "bun run --watch src/index.ts",
+    "dev": "bun run --watch src/backend/index2.ts",
     "call": "bun run ./src/backend/services/call-contract.ts",
     "json": "bun run ./src/backend/services/generate-json.ts",
     "capture-user-info": "bun run ./src/backend/services/capture/user-info.ts",
