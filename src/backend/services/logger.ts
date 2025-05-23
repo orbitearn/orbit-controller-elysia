@@ -6,7 +6,7 @@ import { rootPath } from "../envs";
 import { l } from "../../common/utils";
 
 // Configure log directory and file path
-const LOG_DIR = rootPath("./src/backend/services/logs");
+const LOG_DIR = rootPath("./src/backend/logs");
 const LOG_FILE_PATH = path.join(LOG_DIR, "app.log");
 
 // Create logs directory if it doesn't exist
