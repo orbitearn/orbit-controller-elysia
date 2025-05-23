@@ -1,17 +1,9 @@
 import { l } from "../../../common/utils";
-import { writeFile } from "fs/promises";
-import { ChainType } from "../../../common/interfaces";
-import { ENCODING } from "../utils";
-import { ENV, rootPath } from "../../envs";
+import { writeSnapshot } from "../utils";
+import { ENV } from "../../envs";
 import { getCwHelpers } from "../chain";
 
 const PAGINATION_QUERY_AMOUNT = 10;
-
-function getSnapshotPath(name: string, chainType: ChainType, fileName: string) {
-  return rootPath(
-    `./src/backend/services/snapshots/${name}/${chainType}net/${fileName}`
-  );
-}
 
 async function main() {
   const {
@@ -20,30 +12,23 @@ async function main() {
     chainType,
   } = await getCwHelpers(ENV.USER_SEED);
 
-  const writeUserInfo = async () => {
-    try {
-      const userCounterList = await bank.pQueryUserCounterList(
-        PAGINATION_QUERY_AMOUNT
-      );
-      const { counter: appCounter } = await bank.cwQueryDistributionState({});
-      const counterDiffList: [string, number][] = userCounterList.map(
-        ([user, cnt]) => [user, appCounter - cnt]
-      );
+  try {
+    const userCounterList = await bank.pQueryUserCounterList(
+      PAGINATION_QUERY_AMOUNT
+    );
+    const { counter: appCounter } = await bank.cwQueryDistributionState({});
+    let counterDiffList: [string, number][] = userCounterList.map(
+      ([user, cnt]) => [user, appCounter - cnt]
+    );
+    counterDiffList = counterDiffList.sort(
+      ([_addrA, cntA], [_addrB, cntB]) => cntB - cntA
+    );
 
-      // write files
-      await writeFile(
-        getSnapshotPath(chainName, chainType, "counter-diff.json"),
-        JSON.stringify(counterDiffList, null, 2),
-        {
-          encoding: ENCODING,
-        }
-      );
-    } catch (error) {
-      l(error);
-    }
-  };
-
-  await writeUserInfo();
+    // write files
+    await writeSnapshot("counter-diff", counterDiffList, chainName, chainType);
+  } catch (error) {
+    l(error);
+  }
 }
 
 main();

@@ -1,8 +1,8 @@
-import { readFile, writeFile } from "fs/promises";
+import { writeFile } from "fs/promises";
 import { floor, getLast, l } from "../../common/utils";
 import { rootPath } from "../envs";
 import { Label } from "../../common/config";
-import { StoreArgs } from "../../common/interfaces";
+import { ChainType, StoreArgs } from "../../common/interfaces";
 
 export const MS_PER_SECOND = 1_000;
 export const ENCODING = "utf8";
@@ -143,27 +143,40 @@ export function getBlockTime(blockTimeOffset: number): number {
   return blockTimeOffset + getLocalBlockTime();
 }
 
-export async function writeSnapshot(fileName: string, file: any) {
-  const path = rootPath(`./src/backend/services/snapshots/${fileName}.json`);
-
-  await writeFile(path, JSON.stringify(file), {
-    encoding: ENCODING,
-  });
+function getSnapshotPath(name: string, chainType: ChainType, fileName: string) {
+  return rootPath(
+    `./src/backend/snapshots/${name}/${chainType}net/${fileName}.json`
+  );
 }
 
-export async function readSnapshot<T>(
+export async function writeSnapshot(
   fileName: string,
-  defaultValue: T
-): Promise<T> {
-  const path = rootPath(`./src/backend/services/snapshots/${fileName}.json`);
-  const data = (
-    await readFile(path, {
+  file: any,
+  chainName: string,
+  chainType: ChainType
+) {
+  await writeFile(
+    getSnapshotPath(chainName, chainType, fileName),
+    JSON.stringify(file, null, 2),
+    {
       encoding: ENCODING,
-    })
-  ).trim();
-
-  return data ? JSON.parse(data) : defaultValue;
+    }
+  );
 }
+
+// export async function readSnapshot<T>(
+//   fileName: string,
+//   defaultValue: T
+// ): Promise<T> {
+//   const path = rootPath(`./src/backend/services/snapshots/${fileName}.json`);
+//   const data = (
+//     await readFile(path, {
+//       encoding: ENCODING,
+//     })
+//   ).trim();
+
+//   return data ? JSON.parse(data) : defaultValue;
+// }
 
 interface TaskScheduler {
   scheduleTask: (targetHour: number, taskFunction: () => Promise<void>) => void;
