@@ -9,13 +9,15 @@
   },
   "private": true,
   "scripts": {
-    "start": "bun run src/backend/index2.ts",
+    "start": "bun run src/backend/index.ts",
     "test": "bun test",
-    "dev": "bun run --watch src/backend/index2.ts",
+    "dev": "bun run --watch src/backend/index.ts",
     "call": "bun run ./src/backend/services/call-contract.ts",
     "json": "bun run ./src/backend/services/generate-json.ts",
     "capture-user-info": "bun run ./src/backend/services/capture/user-info.ts",
-    "counter-diff": "bun run ./src/backend/services/capture/counter-diff.ts"
+    "counter-diff": "bun run ./src/backend/services/capture/counter-diff.ts",
+    "set-node-version": "volta pin node@lts",
+    "gen-db-schema": "bunx prisma generate"
   },
   "repository": {
     "type": "git",

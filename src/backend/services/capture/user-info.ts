@@ -1,11 +1,9 @@
 import { l, numberFrom } from "../../../common/utils";
-import { readFile, writeFile } from "fs/promises";
-import { ChainConfig, ChainType } from "../../../common/interfaces";
-import { getChainOptionById } from "../../../common/config/config-utils";
-import { getCwQueryHelpers } from "../../../common/account/cw-helpers";
-import { ENCODING, PATH_TO_CONFIG_JSON, parseStoreArgs } from "../utils";
-import { BANK, CHAIN_ID } from "../../constants";
-import { rootPath } from "../../envs";
+import { writeFile } from "fs/promises";
+import { ChainType } from "../../../common/interfaces";
+import { ENCODING } from "../utils";
+import { ENV, rootPath } from "../../envs";
+import { getCwHelpers } from "../chain";
 
 const PAGINATION_QUERY_AMOUNT = 3;
 
@@ -16,19 +14,11 @@ function getSnapshotPath(name: string, chainType: ChainType, fileName: string) {
 }
 
 async function main() {
-  const configJsonStr = await readFile(PATH_TO_CONFIG_JSON, {
-    encoding: ENCODING,
-  });
-  const CHAIN_CONFIG: ChainConfig = JSON.parse(configJsonStr);
   const {
-    NAME,
-    OPTION: {
-      RPC_LIST: [RPC],
-      TYPE,
-    },
-  } = getChainOptionById(CHAIN_CONFIG, CHAIN_ID);
-
-  const { bank } = await getCwQueryHelpers(CHAIN_ID, RPC);
+    query: { bank },
+    chainName,
+    chainType,
+  } = await getCwHelpers(ENV.USER_SEED);
 
   const writeUserInfo = async () => {
     try {
@@ -41,7 +31,7 @@ async function main() {
 
       // write files
       await writeFile(
-        getSnapshotPath(NAME, TYPE, "user-info.json"),
+        getSnapshotPath(chainName, chainType, "user-info.json"),
         JSON.stringify(userInfoList, null, 2),
         {
           encoding: ENCODING,

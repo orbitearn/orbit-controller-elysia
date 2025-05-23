@@ -1,29 +1,12 @@
 import https from "https";
-import { getSigner } from "../account/signer";
-import { readFile } from "fs/promises";
-import { ChainConfig } from "../../common/interfaces";
-import { ENCODING, PATH_TO_CONFIG_JSON } from "./utils";
-import { getChainOptionById } from "../../common/config/config-utils";
-import { BANK, CHAIN_ID, ROUTE } from "../constants";
-import { UserAsset } from "../helpers";
+import { ROUTE } from "../constants";
+import { ENV } from "../envs";
+import { l, li, numberFrom, Request, wait } from "../../common/utils";
+import { getCwHelpers } from "./chain";
 import {
   getSgQueryHelpers,
   getSgExecHelpers,
 } from "../../common/account/sg-helpers";
-import {
-  getCwExecHelpers,
-  getCwQueryHelpers,
-} from "../../common/account/cw-helpers";
-import { ENV } from "../envs";
-import {
-  floor,
-  getLast,
-  l,
-  li,
-  numberFrom,
-  Request,
-  wait,
-} from "../../common/utils";
 
 const baseURL = (ENV.IS_PROD ? ENV.BE_PROD_URL : ENV.BE_DEV_URL) + "/api";
 const httpsAgent = ENV.IS_PROD
@@ -35,32 +18,18 @@ const req = new Request({ baseURL, httpsAgent });
 
 async function main() {
   try {
-    const configJsonStr = await readFile(PATH_TO_CONFIG_JSON, {
-      encoding: ENCODING,
-    });
-    const CHAIN_CONFIG: ChainConfig = JSON.parse(configJsonStr);
     const {
-      PREFIX,
-      OPTION: {
-        RPC_LIST: [RPC],
-        DENOM,
-        GAS_PRICE_AMOUNT,
-      },
-    } = getChainOptionById(CHAIN_CONFIG, CHAIN_ID);
+      query: { bank },
+      execute: h,
+      gasPrice,
+      bankAddress,
+      rpc,
+      signer,
+      owner,
+    } = await getCwHelpers(ENV.USER_SEED);
 
-    const gasPrice = `${GAS_PRICE_AMOUNT}${DENOM}`;
-
-    // local interchain alice: neutron1q5u23ppwrf7jvns33u9rm2xu8u37wyy64xj4zs
-    const { signer, owner } = await getSigner(PREFIX, ENV.USER_SEED);
-
-    const sgQueryHelpers = await getSgQueryHelpers(RPC);
-    const sgExecHelpers = await getSgExecHelpers(RPC, owner, signer);
-
-    const { bank } = await getCwQueryHelpers(CHAIN_ID, RPC);
-    const h = await getCwExecHelpers(CHAIN_ID, RPC, owner, signer);
-
-    const { getBalance, getAllBalances } = sgQueryHelpers;
-    const { sgMultiSend, sgSend } = sgExecHelpers;
+    const { getBalance, getAllBalances } = await getSgQueryHelpers(rpc);
+    const { sgMultiSend, sgSend } = await getSgExecHelpers(rpc, owner, signer);
     console.clear();
 
     // const address = "neutron1m3zfzylcdcx0gwnv02kt26y8wnlhq4922t389r";
