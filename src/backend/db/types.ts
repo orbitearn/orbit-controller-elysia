@@ -27,3 +27,8 @@ export interface UserDataItem {
   address: string;
   id: string;
 }
+
+export interface LogData {
+  rawContent: string;
+  timestamp: Date;
+}

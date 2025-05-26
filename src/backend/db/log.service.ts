@@ -1,7 +1,7 @@
 import { prisma } from "./prisma";
+import { LogData } from "./types";
 
-// TODO: current_log
-const LOG_RECORD_ID = "current_log_2"; // Fixed document ID
+const LOG_RECORD_ID = "current_log"; // Fixed document ID
 
 export class LogService {
   static async updateLog(content: string): Promise<void> {
@@ -16,6 +16,12 @@ export class LogService {
         rawContent: content,
         timestamp: new Date(),
       },
+    });
+  }
+
+  static async getLog(): Promise<LogData | null> {
+    return await prisma.server_logs.findFirst({
+      where: { recordId: LOG_RECORD_ID },
     });
   }
 }

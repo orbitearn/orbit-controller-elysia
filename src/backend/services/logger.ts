@@ -5,16 +5,16 @@ import { rootPath } from "../envs";
 import { LogService } from "../db/log.service";
 import { MS_PER_SECOND } from "./utils";
 
-// TODO: 500
-const MAX_LOG_LINES = 5; // Limit for number of lines stored in DB
+const MAX_LOG_LINES = 500; // Limit for number of lines stored in DB
 const FLUSH_DEBOUNCE_MS = 5; // Wait 5s after last log
 const FLUSH_MAX_WAIT_MS = 30; // Always flush after 30s
+const LOG_FILE_PATH = "./src/backend/logs/app.log";
 
 // In-memory FIFO queue for logs
 let logQueue: string[] = [];
-
 let debounceTimeout: NodeJS.Timeout | null = null;
 let forceFlushTimeout: NodeJS.Timeout | null = null;
+let isInitialized = false;
 
 // Create a custom Winston transport for file and DB logging
 class FileDbLogTransport extends WinstonTransport {
@@ -26,12 +26,28 @@ class FileDbLogTransport extends WinstonTransport {
   }
 }
 
+// Read existing logs from DB on startup
+export async function initLoggerQueueOnce() {
+  if (isInitialized) {
+    return;
+  }
+  isInitialized = true;
+
+  try {
+    const latestLog = await LogService.getLog();
+    const lines = latestLog?.rawContent?.split("\n") ?? [];
+    logQueue.push(...lines.slice(-MAX_LOG_LINES));
+  } catch (err) {
+    console.error("Failed to load logs from DB:", err);
+  }
+}
+
 // Actually write queue
 async function flushQueue() {
   const content = logQueue.join("\n");
 
   await Promise.all([
-    writeFile(rootPath("./src/backend/logs/app.log"), content, "utf8"),
+    writeFile(rootPath(LOG_FILE_PATH), content, "utf8"),
     LogService.updateLog(content),
   ]);
 }
@@ -73,7 +89,7 @@ function appendLogLine(line: string) {
 }
 
 // Create Winston logger
-export const logger = winston.createLogger({
+const logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
     winston.format.timestamp(),
@@ -88,7 +104,10 @@ export const logger = winston.createLogger({
 export function le(...args: any[]) {
   for (const arg of args) {
     if (arg instanceof Error) {
-      const cleanStack = arg.stack?.replace(arg.message, "").trim();
+      const cleanStack = arg.stack
+        ?.replace("Error:", "")
+        ?.replace(arg.message, "")
+        ?.trim();
       logger.error(`${arg.name}: ${arg.message}\n${cleanStack}`);
     } else {
       const message =

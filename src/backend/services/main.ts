@@ -1,7 +1,7 @@
 import * as math from "mathjs";
 import { BANK, CHAIN_ID } from "../constants";
 import { AppDataService } from "../db/app-data.service";
-import { le } from "./logger";
+import { initLoggerQueueOnce, le } from "./logger";
 import { AssetPrice } from "../db/types";
 import { ENV } from "../envs";
 import { calcAusdcPrice, calcClaimAndSwapData } from "../helpers/math";
@@ -37,6 +37,8 @@ export async function main() {
     bankAddress,
     rpc,
   } = await getCwHelpers(ENV.SEED);
+  // read DB log on the script start
+  await initLoggerQueueOnce();
 
   // helpers
   const getNextAusdcPrice = async () => {
