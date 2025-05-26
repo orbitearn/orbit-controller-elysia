@@ -1,37 +1,75 @@
 import WinstonTransport from "winston-transport";
 import * as winston from "winston";
+import { writeFile } from "fs/promises";
 import { rootPath } from "../envs";
 import { LogService } from "../db/log.service";
+import { MS_PER_SECOND } from "./utils";
 
-const LOG_FILE_PATH = rootPath("./src/backend/logs/app.log");
 // TODO: 500
 const MAX_LOG_LINES = 5; // Limit for number of lines stored in DB
+const FLUSH_DEBOUNCE_MS = 5; // Wait 5s after last log
+const FLUSH_MAX_WAIT_MS = 30; // Always flush after 30s
 
 // In-memory FIFO queue for logs
-const logQueue: string[] = [];
+let logQueue: string[] = [];
 
-// Create a custom Winston transport for DB logging
-class DBLogTransport extends WinstonTransport {
-  async log(info: any, callback: () => void) {
+let debounceTimeout: NodeJS.Timeout | null = null;
+let forceFlushTimeout: NodeJS.Timeout | null = null;
+
+// Create a custom Winston transport for file and DB logging
+class FileDbLogTransport extends WinstonTransport {
+  log(info: any, callback: () => void) {
     const { level, message, timestamp = new Date().toISOString() } = info;
-    const line = `[${timestamp}] ${level.toUpperCase()}: ${message}`;
-
-    await appendToDb(line);
+    const logLine = `[${timestamp}] ${level.toUpperCase()}: ${message}`;
+    appendLogLine(logLine);
     callback();
   }
 }
 
-// Append a log line to the in-memory queue and update the database record
-async function appendToDb(logLine: string) {
-  logQueue.push(logLine);
+// Actually write queue
+async function flushQueue() {
+  const content = logQueue.join("\n");
 
+  await Promise.all([
+    writeFile(rootPath("./src/backend/logs/app.log"), content, "utf8"),
+    LogService.updateLog(content),
+  ]);
+}
+
+function scheduleFlush() {
+  // Cancel and restart debounce flush
+  if (debounceTimeout) clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(async () => {
+    await flushQueue();
+    debounceTimeout = null;
+    if (forceFlushTimeout) {
+      clearTimeout(forceFlushTimeout);
+      forceFlushTimeout = null;
+    }
+  }, FLUSH_DEBOUNCE_MS * MS_PER_SECOND);
+
+  // Start force flush only once
+  if (!forceFlushTimeout) {
+    forceFlushTimeout = setTimeout(async () => {
+      await flushQueue();
+      forceFlushTimeout = null;
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = null;
+      }
+    }, FLUSH_MAX_WAIT_MS * MS_PER_SECOND);
+  }
+}
+
+// Add log line to queue + schedule flush
+function appendLogLine(line: string) {
+  logQueue.push(line);
   // Limit queue size
   if (logQueue.length > MAX_LOG_LINES) {
     logQueue.splice(0, logQueue.length - MAX_LOG_LINES);
   }
 
-  const content = logQueue.join("\n");
-  await LogService.updateLog(content);
+  scheduleFlush();
 }
 
 // Create Winston logger
@@ -43,11 +81,7 @@ export const logger = winston.createLogger({
       return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
     })
   ),
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: LOG_FILE_PATH }),
-    new DBLogTransport(),
-  ],
+  transports: [new winston.transports.Console(), new FileDbLogTransport()],
 });
 
 // Export a logging utility function
