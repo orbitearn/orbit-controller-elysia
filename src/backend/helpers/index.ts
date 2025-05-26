@@ -238,6 +238,7 @@ export interface AssetSample {
   timestamp: Date;
 }
 
+// TODO: implement DB-level aggregation
 export function getAggregatedAssetList(
   userData: UserDataItem[],
   period: number

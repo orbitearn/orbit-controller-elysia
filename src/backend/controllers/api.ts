@@ -1,21 +1,15 @@
-import { readFile } from "fs-extra";
-import { ChainConfig } from "../../common/interfaces";
-import { ENCODING, PATH_TO_CONFIG_JSON } from "../services/utils";
-import {
-  getChainOptionById,
-  getContractByLabel,
-} from "../../common/config/config-utils";
 import { CHAIN_ID } from "../constants";
-import { getCwQueryHelpers } from "../../common/account/cw-helpers";
 import { AppDataService } from "../db/app-data.service";
+import { AppDataItem, UserDataItem } from "../db/types";
+import { UserDataService } from "../db/user-data.service";
+import { getAggregatedAssetList, updateUserData, UserAsset } from "../helpers";
+import { getCwHelpers } from "../services/chain";
+import { ENV } from "../envs";
 import {
   calcApr,
   calcAverageEntryPriceList,
   calcProfit,
 } from "../helpers/math";
-import { AppDataItem, UserDataItem } from "../db/types";
-import { UserDataService } from "../db/user-data.service";
-import { getAggregatedAssetList, updateUserData, UserAsset } from "../helpers";
 
 export async function getTest(): Promise<{
   value: number;
@@ -89,19 +83,11 @@ export async function getApr(
   let aprList: [number, number][] = [];
 
   try {
-    const configJsonStr = await readFile(PATH_TO_CONFIG_JSON, {
-      encoding: ENCODING,
-    });
-    const CHAIN_CONFIG: ChainConfig = JSON.parse(configJsonStr);
     const {
-      OPTION: {
-        RPC_LIST: [RPC],
-      },
-    } = getChainOptionById(CHAIN_CONFIG, CHAIN_ID);
+      query: { bank },
+    } = await getCwHelpers(ENV.SEED);
 
-    const { bank } = await getCwQueryHelpers(CHAIN_ID, RPC);
     const config = await bank.cwQueryConfig();
-
     const appData = await AppDataService.getDataInTimestampRange(from, to);
 
     aprList = calcApr(config.ausdc, appData, period);
@@ -140,18 +126,7 @@ export async function getUserDataInTimestampRange(
 
 export async function updateUserAssets(addressList: string[]): Promise<void> {
   try {
-    const configJsonStr = await readFile(PATH_TO_CONFIG_JSON, {
-      encoding: ENCODING,
-    });
-    const CHAIN_CONFIG: ChainConfig = JSON.parse(configJsonStr);
-    const {
-      OPTION: {
-        RPC_LIST: [RPC],
-        CONTRACTS,
-      },
-    } = getChainOptionById(CHAIN_CONFIG, CHAIN_ID);
-    const bankAddress = getContractByLabel(CONTRACTS, "bank")?.ADDRESS || "";
-
-    await updateUserData(CHAIN_ID, RPC, addressList, bankAddress);
+    const { bankAddress, rpc } = await getCwHelpers(ENV.SEED);
+    await updateUserData(CHAIN_ID, rpc, addressList, bankAddress);
   } catch (_) {}
 }

@@ -164,20 +164,6 @@ export async function writeSnapshot(
   );
 }
 
-// export async function readSnapshot<T>(
-//   fileName: string,
-//   defaultValue: T
-// ): Promise<T> {
-//   const path = rootPath(`./src/backend/services/snapshots/${fileName}.json`);
-//   const data = (
-//     await readFile(path, {
-//       encoding: ENCODING,
-//     })
-//   ).trim();
-
-//   return data ? JSON.parse(data) : defaultValue;
-// }
-
 interface TaskScheduler {
   scheduleTask: (targetHour: number, taskFunction: () => Promise<void>) => void;
   getTimeUntilTarget: (targetHour: number) => number;

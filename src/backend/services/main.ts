@@ -1,4 +1,4 @@
-import math from "mathjs";
+import * as math from "mathjs";
 import { BANK, CHAIN_ID } from "../constants";
 import { AppDataService } from "../db/app-data.service";
 import { le } from "./logger";

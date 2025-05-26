@@ -1,27 +1,20 @@
 import { prisma } from "./prisma";
 
-export class LogService {
-  static async updateLog(
-    fileContent: string,
-    entries: any[],
-    source: string
-  ): Promise<void> {
-    const recordId = "current_log";
+// TODO: current_log
+const LOG_RECORD_ID = "current_log_2"; // Fixed document ID
 
+export class LogService {
+  static async updateLog(content: string): Promise<void> {
     await prisma.server_logs.upsert({
-      where: { recordId },
+      where: { recordId: LOG_RECORD_ID },
       update: {
-        entries,
-        rawContent: fileContent,
+        rawContent: content,
         timestamp: new Date(),
-        source,
       },
       create: {
-        recordId,
-        entries,
-        rawContent: fileContent,
+        recordId: LOG_RECORD_ID,
+        rawContent: content,
         timestamp: new Date(),
-        source,
       },
     });
   }

@@ -1,52 +1,65 @@
+import WinstonTransport from "winston-transport";
 import * as winston from "winston";
-import * as path from "path";
-import * as fs from "fs-extra";
-import { LogWatcher } from "./watcher";
 import { rootPath } from "../envs";
-import { l } from "../../common/utils";
+import { LogService } from "../db/log.service";
 
-// Configure log directory and file path
-const LOG_DIR = rootPath("./src/backend/logs");
-const LOG_FILE_PATH = path.join(LOG_DIR, "app.log");
+const LOG_FILE_PATH = rootPath("./src/backend/logs/app.log");
+// TODO: 500
+const MAX_LOG_LINES = 5; // Limit for number of lines stored in DB
 
-// Create logs directory if it doesn't exist
-fs.ensureDirSync(LOG_DIR);
+// In-memory FIFO queue for logs
+const logQueue: string[] = [];
 
-// Create a Winston logger
+// Create a custom Winston transport for DB logging
+class DBLogTransport extends WinstonTransport {
+  async log(info: any, callback: () => void) {
+    const { level, message, timestamp = new Date().toISOString() } = info;
+    const line = `[${timestamp}] ${level.toUpperCase()}: ${message}`;
+
+    await appendToDb(line);
+    callback();
+  }
+}
+
+// Append a log line to the in-memory queue and update the database record
+async function appendToDb(logLine: string) {
+  logQueue.push(logLine);
+
+  // Limit queue size
+  if (logQueue.length > MAX_LOG_LINES) {
+    logQueue.splice(0, logQueue.length - MAX_LOG_LINES);
+  }
+
+  const content = logQueue.join("\n");
+  await LogService.updateLog(content);
+}
+
+// Create Winston logger
 export const logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.json()
+    winston.format.printf(({ level, message, timestamp }) => {
+      return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
+    })
   ),
   transports: [
-    // Write to console
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
-    }),
-    // Write all logs to file
-    new winston.transports.File({
-      filename: LOG_FILE_PATH,
-    }),
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: LOG_FILE_PATH }),
+    new DBLogTransport(),
   ],
 });
 
 // Export a logging utility function
 export function le(...args: any[]) {
-  logger.info.apply(logger, args as any);
-  l(args);
+  for (const arg of args) {
+    if (arg instanceof Error) {
+      const cleanStack = arg.stack?.replace(arg.message, "").trim();
+      logger.error(`${arg.name}: ${arg.message}\n${cleanStack}`);
+    } else {
+      const message =
+        typeof arg === "string" ? arg : JSON.stringify(arg, null, 2);
+      logger.info(message.trim());
+    }
+  }
 }
-
-// Initialize the log watcher
-const logWatcher = new LogWatcher(LOG_FILE_PATH);
-logWatcher.initialize();
-
-// Handle application shutdown
-process.on("SIGINT", () => {
-  logger.info("Application shutting down");
-  logWatcher.stop();
-  process.exit(0);
-});

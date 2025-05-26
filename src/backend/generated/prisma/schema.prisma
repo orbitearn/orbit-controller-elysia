@@ -35,13 +35,9 @@ model app_data {
 }
 
 model server_logs {
-  id         String              @id @default(auto()) @map("_id") @db.ObjectId
-  entries    ServerLogsEntries[]
+  recordId   String   @id @map("_id")
   rawContent String
-  /// TODO: may require migration as recordId is unique now
-  recordId   String              @unique
-  source     String
-  timestamp  DateTime            @db.Date
+  timestamp  DateTime
 }
 
 model user_data {

@@ -120,10 +120,8 @@ exports.Prisma.App_dataScalarFieldEnum = {
 };
 
 exports.Prisma.Server_logsScalarFieldEnum = {
-  id: 'id',
-  rawContent: 'rawContent',
   recordId: 'recordId',
-  source: 'source',
+  rawContent: 'rawContent',
   timestamp: 'timestamp'
 };
 

@@ -19,16 +19,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type AppDataAssetPrices = $Result.DefaultSelection<Prisma.$AppDataAssetPricesPayload>
 /**
- * Model ServerLogsEntries
- * 
- */
-export type ServerLogsEntries = $Result.DefaultSelection<Prisma.$ServerLogsEntriesPayload>
-/**
- * Model ServerLogsEntriesCause
- * 
- */
-export type ServerLogsEntriesCause = $Result.DefaultSelection<Prisma.$ServerLogsEntriesCausePayload>
-/**
  * Model app_data
  * 
  */
@@ -1087,148 +1077,6 @@ export namespace Prisma {
 
 
   /**
-   * Model ServerLogsEntries
-   */
-
-
-
-
-
-  export type ServerLogsEntriesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    cause?: boolean | ServerLogsEntriesCauseDefaultArgs<ExtArgs>
-    level?: boolean
-    message?: boolean
-    timestamp?: boolean
-  }, ExtArgs["result"]["serverLogsEntries"]>
-
-
-
-  export type ServerLogsEntriesSelectScalar = {
-    level?: boolean
-    message?: boolean
-    timestamp?: boolean
-  }
-
-  export type ServerLogsEntriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"cause" | "level" | "message" | "timestamp", ExtArgs["result"]["serverLogsEntries"]>
-  export type ServerLogsEntriesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $ServerLogsEntriesPayload = {
-    name: "ServerLogsEntries"
-    objects: {}
-    scalars: {
-      level: string
-      message: string | null
-      timestamp: string
-    }
-    composites: {
-      cause: Prisma.$ServerLogsEntriesCausePayload | null
-    }
-  }
-
-  type ServerLogsEntriesGetPayload<S extends boolean | null | undefined | ServerLogsEntriesDefaultArgs> = $Result.GetResult<Prisma.$ServerLogsEntriesPayload, S>
-
-
-
-
-
-  /**
-   * Fields of the ServerLogsEntries model
-   */
-  interface ServerLogsEntriesFieldRefs {
-    readonly level: FieldRef<"ServerLogsEntries", 'String'>
-    readonly message: FieldRef<"ServerLogsEntries", 'String'>
-    readonly timestamp: FieldRef<"ServerLogsEntries", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * ServerLogsEntries without action
-   */
-  export type ServerLogsEntriesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServerLogsEntries
-     */
-    select?: ServerLogsEntriesSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServerLogsEntries
-     */
-    omit?: ServerLogsEntriesOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServerLogsEntriesInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model ServerLogsEntriesCause
-   */
-
-
-
-
-
-  export type ServerLogsEntriesCauseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    code?: boolean
-    errno?: boolean
-    syscall?: boolean
-  }, ExtArgs["result"]["serverLogsEntriesCause"]>
-
-
-
-  export type ServerLogsEntriesCauseSelectScalar = {
-    code?: boolean
-    errno?: boolean
-    syscall?: boolean
-  }
-
-  export type ServerLogsEntriesCauseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"code" | "errno" | "syscall", ExtArgs["result"]["serverLogsEntriesCause"]>
-
-  export type $ServerLogsEntriesCausePayload = {
-    name: "ServerLogsEntriesCause"
-    objects: {}
-    scalars: {
-      code: string
-      errno: number
-      syscall: string
-    }
-    composites: {}
-  }
-
-  type ServerLogsEntriesCauseGetPayload<S extends boolean | null | undefined | ServerLogsEntriesCauseDefaultArgs> = $Result.GetResult<Prisma.$ServerLogsEntriesCausePayload, S>
-
-
-
-
-
-  /**
-   * Fields of the ServerLogsEntriesCause model
-   */
-  interface ServerLogsEntriesCauseFieldRefs {
-    readonly code: FieldRef<"ServerLogsEntriesCause", 'String'>
-    readonly errno: FieldRef<"ServerLogsEntriesCause", 'Int'>
-    readonly syscall: FieldRef<"ServerLogsEntriesCause", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * ServerLogsEntriesCause without action
-   */
-  export type ServerLogsEntriesCauseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServerLogsEntriesCause
-     */
-    select?: ServerLogsEntriesCauseSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServerLogsEntriesCause
-     */
-    omit?: ServerLogsEntriesCauseOmit<ExtArgs> | null
-  }
-
-
-  /**
    * Model app_data
    */
 
@@ -2227,52 +2075,40 @@ export namespace Prisma {
   }
 
   export type Server_logsMinAggregateOutputType = {
-    id: string | null
-    rawContent: string | null
     recordId: string | null
-    source: string | null
+    rawContent: string | null
     timestamp: Date | null
   }
 
   export type Server_logsMaxAggregateOutputType = {
-    id: string | null
-    rawContent: string | null
     recordId: string | null
-    source: string | null
+    rawContent: string | null
     timestamp: Date | null
   }
 
   export type Server_logsCountAggregateOutputType = {
-    id: number
-    rawContent: number
     recordId: number
-    source: number
+    rawContent: number
     timestamp: number
     _all: number
   }
 
 
   export type Server_logsMinAggregateInputType = {
-    id?: true
-    rawContent?: true
     recordId?: true
-    source?: true
+    rawContent?: true
     timestamp?: true
   }
 
   export type Server_logsMaxAggregateInputType = {
-    id?: true
-    rawContent?: true
     recordId?: true
-    source?: true
+    rawContent?: true
     timestamp?: true
   }
 
   export type Server_logsCountAggregateInputType = {
-    id?: true
-    rawContent?: true
     recordId?: true
-    source?: true
+    rawContent?: true
     timestamp?: true
     _all?: true
   }
@@ -2350,10 +2186,8 @@ export namespace Prisma {
   }
 
   export type Server_logsGroupByOutputType = {
-    id: string
-    rawContent: string
     recordId: string
-    source: string
+    rawContent: string
     timestamp: Date
     _count: Server_logsCountAggregateOutputType | null
     _min: Server_logsMinAggregateOutputType | null
@@ -2375,43 +2209,30 @@ export namespace Prisma {
 
 
   export type server_logsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    entries?: boolean | ServerLogsEntriesDefaultArgs<ExtArgs>
-    rawContent?: boolean
     recordId?: boolean
-    source?: boolean
+    rawContent?: boolean
     timestamp?: boolean
   }, ExtArgs["result"]["server_logs"]>
 
 
 
   export type server_logsSelectScalar = {
-    id?: boolean
-    rawContent?: boolean
     recordId?: boolean
-    source?: boolean
+    rawContent?: boolean
     timestamp?: boolean
   }
 
-  export type server_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "entries" | "rawContent" | "recordId" | "source" | "timestamp", ExtArgs["result"]["server_logs"]>
-  export type server_logsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type server_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"recordId" | "rawContent" | "timestamp", ExtArgs["result"]["server_logs"]>
 
   export type $server_logsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "server_logs"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
-      id: string
-      rawContent: string
-      /**
-       * TODO: may require migration as recordId is unique now
-       */
       recordId: string
-      source: string
+      rawContent: string
       timestamp: Date
     }, ExtArgs["result"]["server_logs"]>
-    composites: {
-      entries: Prisma.$ServerLogsEntriesPayload[]
-    }
+    composites: {}
   }
 
   type server_logsGetPayload<S extends boolean | null | undefined | server_logsDefaultArgs> = $Result.GetResult<Prisma.$server_logsPayload, S>
@@ -2493,8 +2314,8 @@ export namespace Prisma {
      * // Get first 10 Server_logs
      * const server_logs = await prisma.server_logs.findMany({ take: 10 })
      * 
-     * // Only select the `id`
-     * const server_logsWithIdOnly = await prisma.server_logs.findMany({ select: { id: true } })
+     * // Only select the `recordId`
+     * const server_logsWithRecordIdOnly = await prisma.server_logs.findMany({ select: { recordId: true } })
      * 
      */
     findMany<T extends server_logsFindManyArgs>(args?: SelectSubset<T, server_logsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$server_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -2802,10 +2623,8 @@ export namespace Prisma {
    * Fields of the server_logs model
    */
   interface server_logsFieldRefs {
-    readonly id: FieldRef<"server_logs", 'String'>
-    readonly rawContent: FieldRef<"server_logs", 'String'>
     readonly recordId: FieldRef<"server_logs", 'String'>
-    readonly source: FieldRef<"server_logs", 'String'>
+    readonly rawContent: FieldRef<"server_logs", 'String'>
     readonly timestamp: FieldRef<"server_logs", 'DateTime'>
   }
     
@@ -2823,10 +2642,6 @@ export namespace Prisma {
      * Omit specific fields from the server_logs
      */
     omit?: server_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
     /**
      * Filter, which server_logs to fetch.
      */
@@ -2846,10 +2661,6 @@ export namespace Prisma {
      */
     omit?: server_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
-    /**
      * Filter, which server_logs to fetch.
      */
     where: server_logsWhereUniqueInput
@@ -2867,10 +2678,6 @@ export namespace Prisma {
      * Omit specific fields from the server_logs
      */
     omit?: server_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
     /**
      * Filter, which server_logs to fetch.
      */
@@ -2920,10 +2727,6 @@ export namespace Prisma {
      */
     omit?: server_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
-    /**
      * Filter, which server_logs to fetch.
      */
     where?: server_logsWhereInput
@@ -2972,10 +2775,6 @@ export namespace Prisma {
      */
     omit?: server_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
-    /**
      * Filter, which server_logs to fetch.
      */
     where?: server_logsWhereInput
@@ -3019,10 +2818,6 @@ export namespace Prisma {
      */
     omit?: server_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
-    /**
      * The data needed to create a server_logs.
      */
     data: XOR<server_logsCreateInput, server_logsUncheckedCreateInput>
@@ -3050,10 +2845,6 @@ export namespace Prisma {
      * Omit specific fields from the server_logs
      */
     omit?: server_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
     /**
      * The data needed to update a server_logs.
      */
@@ -3095,10 +2886,6 @@ export namespace Prisma {
      */
     omit?: server_logsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
-    /**
      * The filter to search for the server_logs to update in case it exists.
      */
     where: server_logsWhereUniqueInput
@@ -3124,10 +2911,6 @@ export namespace Prisma {
      * Omit specific fields from the server_logs
      */
     omit?: server_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
     /**
      * Filter which server_logs to delete.
      */
@@ -3188,10 +2971,6 @@ export namespace Prisma {
      * Omit specific fields from the server_logs
      */
     omit?: server_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: server_logsInclude<ExtArgs> | null
   }
 
 
@@ -4175,10 +3954,8 @@ export namespace Prisma {
 
 
   export const Server_logsScalarFieldEnum: {
-    id: 'id',
-    rawContent: 'rawContent',
     recordId: 'recordId',
-    source: 'source',
+    rawContent: 'rawContent',
     timestamp: 'timestamp'
   };
 
@@ -4327,40 +4104,29 @@ export namespace Prisma {
     AND?: server_logsWhereInput | server_logsWhereInput[]
     OR?: server_logsWhereInput[]
     NOT?: server_logsWhereInput | server_logsWhereInput[]
-    id?: StringFilter<"server_logs"> | string
-    entries?: ServerLogsEntriesCompositeListFilter | ServerLogsEntriesObjectEqualityInput[]
-    rawContent?: StringFilter<"server_logs"> | string
     recordId?: StringFilter<"server_logs"> | string
-    source?: StringFilter<"server_logs"> | string
+    rawContent?: StringFilter<"server_logs"> | string
     timestamp?: DateTimeFilter<"server_logs"> | Date | string
   }
 
   export type server_logsOrderByWithRelationInput = {
-    id?: SortOrder
-    entries?: ServerLogsEntriesOrderByCompositeAggregateInput
-    rawContent?: SortOrder
     recordId?: SortOrder
-    source?: SortOrder
+    rawContent?: SortOrder
     timestamp?: SortOrder
   }
 
   export type server_logsWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
     recordId?: string
     AND?: server_logsWhereInput | server_logsWhereInput[]
     OR?: server_logsWhereInput[]
     NOT?: server_logsWhereInput | server_logsWhereInput[]
-    entries?: ServerLogsEntriesCompositeListFilter | ServerLogsEntriesObjectEqualityInput[]
     rawContent?: StringFilter<"server_logs"> | string
-    source?: StringFilter<"server_logs"> | string
     timestamp?: DateTimeFilter<"server_logs"> | Date | string
-  }, "id" | "recordId">
+  }, "recordId">
 
   export type server_logsOrderByWithAggregationInput = {
-    id?: SortOrder
-    rawContent?: SortOrder
     recordId?: SortOrder
-    source?: SortOrder
+    rawContent?: SortOrder
     timestamp?: SortOrder
     _count?: server_logsCountOrderByAggregateInput
     _max?: server_logsMaxOrderByAggregateInput
@@ -4371,10 +4137,8 @@ export namespace Prisma {
     AND?: server_logsScalarWhereWithAggregatesInput | server_logsScalarWhereWithAggregatesInput[]
     OR?: server_logsScalarWhereWithAggregatesInput[]
     NOT?: server_logsScalarWhereWithAggregatesInput | server_logsScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"server_logs"> | string
-    rawContent?: StringWithAggregatesFilter<"server_logs"> | string
     recordId?: StringWithAggregatesFilter<"server_logs"> | string
-    source?: StringWithAggregatesFilter<"server_logs"> | string
+    rawContent?: StringWithAggregatesFilter<"server_logs"> | string
     timestamp?: DateTimeWithAggregatesFilter<"server_logs"> | Date | string
   }
 
@@ -4478,61 +4242,40 @@ export namespace Prisma {
   }
 
   export type server_logsCreateInput = {
-    id?: string
-    entries?: XOR<ServerLogsEntriesListCreateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
-    rawContent: string
     recordId: string
-    source: string
+    rawContent: string
     timestamp: Date | string
   }
 
   export type server_logsUncheckedCreateInput = {
-    id?: string
-    entries?: XOR<ServerLogsEntriesListCreateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
-    rawContent: string
     recordId: string
-    source: string
+    rawContent: string
     timestamp: Date | string
   }
 
   export type server_logsUpdateInput = {
-    entries?: XOR<ServerLogsEntriesListUpdateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent?: StringFieldUpdateOperationsInput | string
-    recordId?: StringFieldUpdateOperationsInput | string
-    source?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type server_logsUncheckedUpdateInput = {
-    entries?: XOR<ServerLogsEntriesListUpdateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent?: StringFieldUpdateOperationsInput | string
-    recordId?: StringFieldUpdateOperationsInput | string
-    source?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type server_logsCreateManyInput = {
-    id?: string
-    entries?: XOR<ServerLogsEntriesListCreateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
-    rawContent: string
     recordId: string
-    source: string
+    rawContent: string
     timestamp: Date | string
   }
 
   export type server_logsUpdateManyMutationInput = {
-    entries?: XOR<ServerLogsEntriesListUpdateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent?: StringFieldUpdateOperationsInput | string
-    recordId?: StringFieldUpdateOperationsInput | string
-    source?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type server_logsUncheckedUpdateManyInput = {
-    entries?: XOR<ServerLogsEntriesListUpdateEnvelopeInput, ServerLogsEntriesCreateInput> | ServerLogsEntriesCreateInput[]
     rawContent?: StringFieldUpdateOperationsInput | string
-    recordId?: StringFieldUpdateOperationsInput | string
-    source?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4717,47 +4460,21 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type ServerLogsEntriesCompositeListFilter = {
-    equals?: ServerLogsEntriesObjectEqualityInput[]
-    every?: ServerLogsEntriesWhereInput
-    some?: ServerLogsEntriesWhereInput
-    none?: ServerLogsEntriesWhereInput
-    isEmpty?: boolean
-    isSet?: boolean
-  }
-
-  export type ServerLogsEntriesObjectEqualityInput = {
-    cause?: ServerLogsEntriesCauseObjectEqualityInput | null
-    level: string
-    message?: string | null
-    timestamp: string
-  }
-
-  export type ServerLogsEntriesOrderByCompositeAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type server_logsCountOrderByAggregateInput = {
-    id?: SortOrder
-    rawContent?: SortOrder
     recordId?: SortOrder
-    source?: SortOrder
+    rawContent?: SortOrder
     timestamp?: SortOrder
   }
 
   export type server_logsMaxOrderByAggregateInput = {
-    id?: SortOrder
-    rawContent?: SortOrder
     recordId?: SortOrder
-    source?: SortOrder
+    rawContent?: SortOrder
     timestamp?: SortOrder
   }
 
   export type server_logsMinOrderByAggregateInput = {
-    id?: SortOrder
-    rawContent?: SortOrder
     recordId?: SortOrder
-    source?: SortOrder
+    rawContent?: SortOrder
     timestamp?: SortOrder
   }
 
@@ -4846,24 +4563,6 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
-  }
-
-  export type ServerLogsEntriesListCreateEnvelopeInput = {
-    set?: ServerLogsEntriesCreateInput | ServerLogsEntriesCreateInput[]
-  }
-
-  export type ServerLogsEntriesCreateInput = {
-    cause?: ServerLogsEntriesCauseCreateInput | null
-    level: string
-    message?: string | null
-    timestamp: string
-  }
-
-  export type ServerLogsEntriesListUpdateEnvelopeInput = {
-    set?: ServerLogsEntriesCreateInput | ServerLogsEntriesCreateInput[]
-    push?: ServerLogsEntriesCreateInput | ServerLogsEntriesCreateInput[]
-    updateMany?: ServerLogsEntriesUpdateManyInput
-    deleteMany?: ServerLogsEntriesDeleteManyInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -4980,22 +4679,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type ServerLogsEntriesWhereInput = {
-    AND?: ServerLogsEntriesWhereInput | ServerLogsEntriesWhereInput[]
-    OR?: ServerLogsEntriesWhereInput[]
-    NOT?: ServerLogsEntriesWhereInput | ServerLogsEntriesWhereInput[]
-    cause?: XOR<ServerLogsEntriesCauseNullableCompositeFilter, ServerLogsEntriesCauseObjectEqualityInput> | null
-    level?: StringFilter<"ServerLogsEntries"> | string
-    message?: StringNullableFilter<"ServerLogsEntries"> | string | null
-    timestamp?: StringFilter<"ServerLogsEntries"> | string
-  }
-
-  export type ServerLogsEntriesCauseObjectEqualityInput = {
-    code: string
-    errno: number
-    syscall: string
-  }
-
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -5021,100 +4704,9 @@ export namespace Prisma {
     where: AppDataAssetPricesWhereInput
   }
 
-  export type ServerLogsEntriesCauseCreateInput = {
-    code: string
-    errno: number
-    syscall: string
-  }
-
-  export type ServerLogsEntriesUpdateManyInput = {
-    where: ServerLogsEntriesWhereInput
-    data: ServerLogsEntriesUpdateInput
-  }
-
-  export type ServerLogsEntriesDeleteManyInput = {
-    where: ServerLogsEntriesWhereInput
-  }
-
-  export type ServerLogsEntriesCauseNullableCompositeFilter = {
-    equals?: ServerLogsEntriesCauseObjectEqualityInput | null
-    is?: ServerLogsEntriesCauseWhereInput | null
-    isNot?: ServerLogsEntriesCauseWhereInput | null
-    isSet?: boolean
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-    isSet?: boolean
-  }
-
   export type AppDataAssetPricesUpdateInput = {
     asset?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-  }
-
-  export type ServerLogsEntriesUpdateInput = {
-    cause?: XOR<ServerLogsEntriesCauseNullableUpdateEnvelopeInput, ServerLogsEntriesCauseCreateInput> | null
-    level?: StringFieldUpdateOperationsInput | string
-    message?: NullableStringFieldUpdateOperationsInput | string | null
-    timestamp?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type ServerLogsEntriesCauseWhereInput = {
-    AND?: ServerLogsEntriesCauseWhereInput | ServerLogsEntriesCauseWhereInput[]
-    OR?: ServerLogsEntriesCauseWhereInput[]
-    NOT?: ServerLogsEntriesCauseWhereInput | ServerLogsEntriesCauseWhereInput[]
-    code?: StringFilter<"ServerLogsEntriesCause"> | string
-    errno?: IntFilter<"ServerLogsEntriesCause"> | number
-    syscall?: StringFilter<"ServerLogsEntriesCause"> | string
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-    isSet?: boolean
-  }
-
-  export type ServerLogsEntriesCauseNullableUpdateEnvelopeInput = {
-    set?: ServerLogsEntriesCauseCreateInput | null
-    upsert?: ServerLogsEntriesCauseUpsertInput
-    unset?: boolean
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-    unset?: boolean
-  }
-
-  export type ServerLogsEntriesCauseUpsertInput = {
-    set: ServerLogsEntriesCauseCreateInput | null
-    update: ServerLogsEntriesCauseUpdateInput
-  }
-
-  export type ServerLogsEntriesCauseUpdateInput = {
-    code?: StringFieldUpdateOperationsInput | string
-    errno?: IntFieldUpdateOperationsInput | number
-    syscall?: StringFieldUpdateOperationsInput | string
   }
 
 
