@@ -1,7 +1,6 @@
 import { prisma } from "./prisma";
-import { LogData } from "./types";
-
-const LOG_RECORD_ID = "current_log"; // Fixed document ID
+import { LogData } from "../../interfaces/db";
+import { LOG_RECORD_ID } from "../../constants";
 
 export class LogService {
   static async updateLog(content: string): Promise<void> {

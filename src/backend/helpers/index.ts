@@ -1,17 +1,18 @@
-import { getCwQueryHelpers } from "../../common/account/cw-helpers";
-import { AssetItem, Token } from "../../common/codegen/Bank.types";
-import { TokenInfo } from "../../common/interfaces";
-import { AppDataService } from "../db/app-data.service";
-import { UserDataService } from "../db/user-data.service";
-import { dateToTimestamp, toDate } from "../services/utils";
 import * as math from "mathjs";
+import { getCwQueryHelpers } from "../../common/account/cw-helpers";
+import { AssetItem } from "../../common/codegen/Bank.types";
+import { TokenInfo } from "../../common/interfaces";
+import { AppDataService } from "../services/db/app-data";
+import { UserDataService } from "../services/db/user-data";
+import { dateToTimestamp, getTokenSymbol, toDate } from "../utils";
 import { BANK, DECIMALS_DEFAULT } from "../constants";
+import { AssetAmount, TimestampData, UserDataItem } from "../interfaces/db";
 import {
-  AppDataItem,
-  AssetAmount,
-  TimestampData,
-  UserDataItem,
-} from "../db/types";
+  AssetSample,
+  PriceItem,
+  UserAsset,
+  UserDataListItem,
+} from "../interfaces/helpers";
 import {
   DECIMAL_PLACES,
   dedupVector,
@@ -19,11 +20,6 @@ import {
   numberFrom,
   Request,
 } from "../../common/utils/index";
-
-export interface PriceItem {
-  price: math.BigNumber;
-  symbol: string;
-}
 
 export async function getAllPrices(symbols?: string[]): Promise<PriceItem[]> {
   const baseURL = "https://api.astroport.fi/api";
@@ -62,34 +58,21 @@ export async function getAllPrices(symbols?: string[]): Promise<PriceItem[]> {
   });
 }
 
-export function getTokenSymbol(token: Token): string {
-  return "native" in token ? token.native.denom : token.cw20.address;
-}
-
 export async function updateUserData(
   chainId: string,
   rpc: string,
   userList: string[],
   bankAddress: string
 ): Promise<void> {
-  interface UserDataListItem {
-    user: string;
-    userData: UserDataItem[];
-    appData: AppDataItem[];
-    dbAssets: AssetItem[][];
-  }
-
   let addressAndDataList: [string, TimestampData[]][] = [];
 
   // get user data from the contract
   const { bank } = await getCwQueryHelpers(chainId, rpc);
-  const dbAssetsList = await bank.cwQueryDbAssetsList(userList);
-  const assetList = await bank.pQueryAssetList(BANK.PAGINATION.ASSET_LIST);
-
-  const distributionStateList = await bank.cwQueryDistributionStateList([
-    ...userList,
-    bankAddress,
+  const [dbAssetsList, distributionStateList] = await Promise.all([
+    bank.cwQueryDbAssetsList(userList),
+    bank.cwQueryDistributionStateList([...userList, bankAddress]),
   ]);
+  const assetList = await bank.pQueryAssetList(BANK.PAGINATION.ASSET_LIST);
   const userDistributionStateList = distributionStateList.filter(
     ([address]) => address !== bankAddress
   );
@@ -110,15 +93,12 @@ export async function updateUserData(
     const dateFrom =
       dateToTimestamp(timestamp) ||
       dateTo - BANK.DISTRIBUTION_PERIOD * BANK.MAX_COUNTER_DIFF;
-    const userData = await UserDataService.getDataInTimestampRange(
-      user,
-      dateFrom,
-      dateTo
-    );
-    const appData = await AppDataService.getDataInTimestampRange(
-      dateFrom,
-      dateTo
-    );
+
+    const [userData, appData] = await Promise.all([
+      UserDataService.getDataInTimestampRange(user, dateFrom, dateTo),
+      AppDataService.getDataInTimestampRange(dateFrom, dateTo),
+    ]);
+
     const dbAssets =
       dbAssetsList.find(([address]) => address === user)?.[1] || [];
 
@@ -228,17 +208,6 @@ export function getUpdateStateList(
     .slice(0, maxUpdateStateList);
 }
 
-export interface UserAsset {
-  asset: string;
-  samples: AssetSample[];
-}
-
-export interface AssetSample {
-  amount: number;
-  timestamp: Date;
-}
-
-// TODO: implement DB-level aggregation
 export function getAggregatedAssetList(
   userData: UserDataItem[],
   period: number

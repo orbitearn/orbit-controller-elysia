@@ -1,12 +1,17 @@
+import path from "path";
 import { writeFile } from "fs/promises";
-import { floor, getLast, l } from "../../common/utils";
-import { rootPath } from "../envs";
-import { Label } from "../../common/config";
-import { ChainType, StoreArgs } from "../../common/interfaces";
+import { floor, getLast, l } from "../common/utils";
+import { Label } from "../common/config";
+import { ChainType, StoreArgs } from "../common/interfaces";
+import { Token, TaskScheduler } from "./interfaces/utils";
+import { UTILS } from "./constants";
 
-export const MS_PER_SECOND = 1_000;
-export const ENCODING = "utf8";
-export const PATH_TO_CONFIG_JSON = rootPath("./src/common/config/config.json");
+const { ENCODING, MS_PER_SECOND, PATH_TO_CONFIG_JSON_STR } = UTILS;
+export const PATH_TO_CONFIG_JSON = rootPath(PATH_TO_CONFIG_JSON_STR);
+
+export function rootPath(dir: string): string {
+  return path.resolve(__dirname, "../../", dir);
+}
 
 // "$CHAIN_ID|$LABEL_A,$LABEL_B"
 export function parseStoreArgs(): StoreArgs {
@@ -159,14 +164,9 @@ export async function writeSnapshot(
     getSnapshotPath(chainName, chainType, fileName),
     JSON.stringify(file, null, 2),
     {
-      encoding: ENCODING,
+      encoding: ENCODING as BufferEncoding,
     }
   );
-}
-
-interface TaskScheduler {
-  scheduleTask: (targetHour: number, taskFunction: () => Promise<void>) => void;
-  getTimeUntilTarget: (targetHour: number) => number;
 }
 
 export class ScheduledTaskRunner implements TaskScheduler {
@@ -194,4 +194,8 @@ export class ScheduledTaskRunner implements TaskScheduler {
 
     return targetTime.getTime() - now.getTime();
   }
+}
+
+export function getTokenSymbol(token: Token): string {
+  return "native" in token ? token.native.denom : token.cw20.address;
 }

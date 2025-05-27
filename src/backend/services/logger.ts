@@ -1,14 +1,12 @@
 import WinstonTransport from "winston-transport";
 import * as winston from "winston";
 import { writeFile } from "fs/promises";
-import { rootPath } from "../envs";
-import { LogService } from "../db/log.service";
-import { MS_PER_SECOND } from "./utils";
+import { LogService } from "./db/log";
+import { rootPath } from "../utils";
+import { LOGGER, UTILS } from "../constants";
 
-const MAX_LOG_LINES = 500; // Limit for number of lines stored in DB
-const FLUSH_DEBOUNCE_MS = 5; // Wait 5s after last log
-const FLUSH_MAX_WAIT_MS = 30; // Always flush after 30s
-const LOG_FILE_PATH = "./src/backend/logs/app.log";
+const { FLUSH_DEBOUNCE, FLUSH_MAX_WAIT, LOG_FILE_PATH, MAX_LOG_LINES } = LOGGER;
+const { MS_PER_SECOND } = UTILS;
 
 // In-memory FIFO queue for logs
 let logQueue: string[] = [];
@@ -62,7 +60,7 @@ function scheduleFlush() {
       clearTimeout(forceFlushTimeout);
       forceFlushTimeout = null;
     }
-  }, FLUSH_DEBOUNCE_MS * MS_PER_SECOND);
+  }, FLUSH_DEBOUNCE * MS_PER_SECOND);
 
   // Start force flush only once
   if (!forceFlushTimeout) {
@@ -73,7 +71,7 @@ function scheduleFlush() {
         clearTimeout(debounceTimeout);
         debounceTimeout = null;
       }
-    }, FLUSH_MAX_WAIT_MS * MS_PER_SECOND);
+    }, FLUSH_MAX_WAIT * MS_PER_SECOND);
   }
 }
 

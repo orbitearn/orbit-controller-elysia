@@ -48,9 +48,13 @@ Enter actual values (replace placeholders <_>)
 SEED=<your_seed_phrase>
 USER_SEED=<your_seed_phrase>
 
-DATABASE_URL=<MongoDB_URI>
 DATABASE_URL_PRISMA=<MongoDB_URI>/<db_name>?retryWrites=true&w=majority
-ORBIT_CONTROLLER=<orbit_controller_db_name>
+
+PROD_KEY=<path_to_production_key>
+PROD_CERT=<path_to_production_cert>
+
+DEV_KEY=<path_to_development_key>
+DEV_CERT=<path_to_development_cert>
 
 PORT=<port>
 

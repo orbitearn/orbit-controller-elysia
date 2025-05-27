@@ -1,20 +1,20 @@
-import { ChainConfig } from "../../common/interfaces";
-import { getSigner } from "../account/signer";
-import { CHAIN_ID } from "../constants";
-import { ENCODING, PATH_TO_CONFIG_JSON } from "./utils";
+import { ChainConfig } from "../../../common/interfaces";
+import { getSigner } from "../../../common/account/clients";
+import { CHAIN_ID, UTILS } from "../../constants";
+import { PATH_TO_CONFIG_JSON } from "../../utils";
 import { readFile } from "fs/promises";
 import {
   getCwExecHelpers,
   getCwQueryHelpers,
-} from "../../common/account/cw-helpers";
+} from "../../../common/account/cw-helpers";
 import {
   getChainOptionById,
   getContractByLabel,
-} from "../../common/config/config-utils";
+} from "../../../common/config/config-utils";
 
 export async function getCwHelpers(seed: string) {
   const configJsonStr = await readFile(PATH_TO_CONFIG_JSON, {
-    encoding: ENCODING,
+    encoding: UTILS.ENCODING as BufferEncoding,
   });
   const CHAIN_CONFIG: ChainConfig = JSON.parse(configJsonStr);
   const {

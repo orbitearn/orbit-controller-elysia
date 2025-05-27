@@ -1,6 +1,6 @@
-import { TimestampData, UserDataItem } from "./types";
+import { TimestampData, UserDataItem } from "../../interfaces/db";
 import { prisma } from "./prisma";
-import { toDate } from "../services/utils";
+import { toDate } from "../../utils";
 
 export class UserDataService {
   static async addMultipleDataList(

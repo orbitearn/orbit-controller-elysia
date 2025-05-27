@@ -1,9 +1,10 @@
 import { CHAIN_ID } from "../constants";
-import { AppDataService } from "../db/app-data.service";
-import { AppDataItem, UserDataItem } from "../db/types";
-import { UserDataService } from "../db/user-data.service";
-import { getAggregatedAssetList, updateUserData, UserAsset } from "../helpers";
-import { getCwHelpers } from "../services/chain";
+import { AppDataService } from "../services/db/app-data";
+import { AppDataItem, UserDataItem } from "../interfaces/db";
+import { UserAsset } from "../interfaces/helpers";
+import { UserDataService } from "../services/db/user-data";
+import { getAggregatedAssetList, updateUserData } from "../helpers";
+import { getCwHelpers } from "../services/chain/get-helpers";
 import { ENV } from "../envs";
 import {
   calcApr,
@@ -73,7 +74,6 @@ export async function getApr(
       ),
       AppDataService.getDataInTimestampRange(from, to),
     ]);
-    // TODO
     return calcApr(ausdc, appData, period);
   } catch (_) {
     return [];
@@ -103,7 +103,6 @@ export async function getUserDataInTimestampRange(
       from,
       to
     );
-    // TODO
     return getAggregatedAssetList(userData, period);
   } catch (_) {
     return [];

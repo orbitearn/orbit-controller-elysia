@@ -1,6 +1,6 @@
 import { AssetItem, UserInfoResponse } from "../../common/codegen/Bank.types";
-import { AppDataItem, UserDataItem } from "../db/types";
-import { dateToTimestamp } from "../services/utils";
+import { AppDataItem, UserDataItem } from "../interfaces/db";
+import { dateToTimestamp } from "../utils";
 import {
   DECIMAL_PLACES,
   dedupVector,

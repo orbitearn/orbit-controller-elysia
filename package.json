@@ -2,16 +2,17 @@
   "name": "orbit-controller-elysia",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/backend/index.ts",
-  "module": "./src/backend/index.ts",
+  "main": "./src/backend/app.ts",
+  "module": "./src/backend/app.ts",
   "volta": {
     "node": "22.15.1"
   },
   "private": true,
   "scripts": {
-    "start": "bun run src/backend/index.ts",
+    "start": "bun run src/backend/app.ts",
     "test": "bun test",
-    "dev": "bun run --watch src/backend/index.ts",
+    "dev": "bun run --watch src/backend/app.ts",
+    "compile": "bun build --compile --minify-whitespace --minify-syntax --target bun --outfile ./dist/server ./src/backend/app.ts",
     "call": "bun run ./src/backend/services/call-contract.ts",
     "json": "bun run ./src/backend/services/generate-json.ts",
     "capture-user-info": "bun run ./src/backend/services/capture/user-info.ts",

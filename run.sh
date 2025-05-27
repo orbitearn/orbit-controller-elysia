@@ -1,3 +1,3 @@
 #!/bin/bash
-cd ~/orbit-controller
-yarn run start
+cd ~/orbit-controller-elysia
+./dist/server

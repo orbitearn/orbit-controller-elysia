@@ -1,11 +1,11 @@
 import * as math from "mathjs";
-import { BANK, CHAIN_ID } from "../constants";
-import { AppDataService } from "../db/app-data.service";
+import { BANK, CHAIN_ID, UTILS } from "../constants";
+import { AppDataService } from "./db/app-data";
 import { initLoggerQueueOnce, le } from "./logger";
-import { AssetPrice } from "../db/types";
+import { AssetPrice } from "../interfaces/db";
 import { ENV } from "../envs";
 import { calcAusdcPrice, calcClaimAndSwapData } from "../helpers/math";
-import { getCwHelpers } from "./chain";
+import { getCwHelpers } from "./chain/get-helpers";
 import {
   extractPrices,
   getAllPrices,
@@ -24,9 +24,8 @@ import {
   epochToDateStringUTC,
   getBlockTime,
   getLocalBlockTime,
-  MS_PER_SECOND,
   toDate,
-} from "./utils";
+} from "../utils";
 
 export async function main() {
   // init
@@ -94,7 +93,7 @@ export async function main() {
     nextUpdateDate: epochToDateStringUTC(nextUpdateDate),
   });
 
-  await wait((scriptStartTimestamp - blockTime) * MS_PER_SECOND);
+  await wait((scriptStartTimestamp - blockTime) * UTILS.MS_PER_SECOND);
   le(
     `\n✔️ Script is running since: ${epochToDateStringUTC(
       getBlockTime(blockTimeOffset)
@@ -105,7 +104,7 @@ export async function main() {
   let isAusdcPriceUpdated = true;
   while (true) {
     // to limit rpc request frequency
-    await wait(BANK.CYCLE_COOLDOWN * MS_PER_SECOND);
+    await wait(BANK.CYCLE_COOLDOWN * UTILS.MS_PER_SECOND);
 
     let usersToUpdate: string[] = [];
     // check distribution date and user counters

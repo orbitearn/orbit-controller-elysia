@@ -1,11 +1,7 @@
 import { describe, expect, it } from "bun:test";
-import { AppDataItem, UserDataItem } from "../db/types";
+import { AppDataItem, UserDataItem } from "../interfaces/db";
 import { getUpdateStateList } from "../helpers";
-import {
-  dateStringToEpochUTC,
-  epochToDateStringUTC,
-  toDate,
-} from "../services/utils";
+import { dateStringToEpochUTC, epochToDateStringUTC, toDate } from "../utils";
 import {
   calcAverageEntryPriceList,
   calcProfit,

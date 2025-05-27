@@ -1,14 +1,11 @@
-import path from "path";
-
-export function rootPath(dir: string): string {
-  return path.resolve(__dirname, "../../", dir);
-}
-
 const schema = {
   SEED: (x: string) => x,
   USER_SEED: (x: string) => x,
-  DATABASE_URL: (x: string) => x,
-  ORBIT_CONTROLLER: (x: string) => x,
+  DATABASE_URL_PRISMA: (x: string) => x,
+  PROD_KEY: (x: string) => x,
+  PROD_CERT: (x: string) => x,
+  DEV_KEY: (x: string) => x,
+  DEV_CERT: (x: string) => x,
   PORT: (x: string) => x,
   LOCAL_IP_LIST: (x: string) => JSON.parse(x) as string[],
   LOCAL_PORT_LIST: (x: string) => JSON.parse(x) as number[],

@@ -1,6 +1,6 @@
-import { AppDataItem, AssetPrice } from "./types";
+import { AppDataItem, AssetPrice } from "../../interfaces/db";
 import { prisma } from "./prisma";
-import { toDate } from "../services/utils";
+import { toDate } from "../../utils";
 
 export class AppDataService {
   static async addDataItem(

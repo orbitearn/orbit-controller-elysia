@@ -1,7 +1,7 @@
 import { l } from "../../../common/utils";
-import { writeSnapshot } from "../utils";
+import { writeSnapshot } from "../../utils";
 import { ENV } from "../../envs";
-import { getCwHelpers } from "../chain";
+import { getCwHelpers } from "../chain/get-helpers";
 
 const PAGINATION_QUERY_AMOUNT = 10;
 
