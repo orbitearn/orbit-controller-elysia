@@ -23,21 +23,15 @@ export async function getAverageEntryPrice(
   to: number,
   excludeAsset: string
 ): Promise<[string, number][]> {
-  let averagePriceList: [string, number][] = [];
-
   try {
-    const userData = await UserDataService.getDataInTimestampRange(
-      address,
-      from,
-      to,
-      excludeAsset
-    );
-    const appData = await AppDataService.getDataInTimestampRange(from, to);
-
-    averagePriceList = calcAverageEntryPriceList(appData, userData);
-  } catch (_) {}
-
-  return averagePriceList;
+    const [userData, appData] = await Promise.all([
+      UserDataService.getDataInTimestampRange(address, from, to, excludeAsset),
+      AppDataService.getDataInTimestampRange(from, to),
+    ]);
+    return calcAverageEntryPriceList(appData, userData);
+  } catch (_) {
+    return [];
+  }
 }
 
 export async function getProfit(
@@ -46,33 +40,25 @@ export async function getProfit(
   to: number,
   excludeAsset: string
 ): Promise<[string, number][]> {
-  let profitList: [string, number][] = [];
-
   try {
-    const userData = await UserDataService.getDataInTimestampRange(
-      address,
-      from,
-      to,
-      excludeAsset
-    );
-    const appData = await AppDataService.getDataInTimestampRange(from, to);
-
-    profitList = calcProfit(appData, userData);
-  } catch (_) {}
-
-  return profitList;
+    const [userData, appData] = await Promise.all([
+      UserDataService.getDataInTimestampRange(address, from, to, excludeAsset),
+      AppDataService.getDataInTimestampRange(from, to),
+    ]);
+    return calcProfit(appData, userData);
+  } catch (_) {
+    return [];
+  }
 }
 
 export async function getUserFirstData(
   address: string
 ): Promise<UserDataItem | null> {
-  let userFirstData: UserDataItem | null = null;
-
   try {
-    userFirstData = await UserDataService.getFirstData(address);
-  } catch (_) {}
-
-  return userFirstData;
+    return await UserDataService.getFirstData(address);
+  } catch (_) {
+    return null;
+  }
 }
 
 export async function getApr(
@@ -80,33 +66,29 @@ export async function getApr(
   to: number,
   period: number
 ): Promise<[number, number][]> {
-  let aprList: [number, number][] = [];
-
   try {
-    const {
-      query: { bank },
-    } = await getCwHelpers(ENV.SEED);
-
-    const config = await bank.cwQueryConfig();
-    const appData = await AppDataService.getDataInTimestampRange(from, to);
-
-    aprList = calcApr(config.ausdc, appData, period);
-  } catch (_) {}
-
-  return aprList;
+    const [ausdc, appData] = await Promise.all([
+      getCwHelpers(ENV.SEED).then((x) =>
+        x.query.bank.cwQueryConfig().then((y) => y.ausdc)
+      ),
+      AppDataService.getDataInTimestampRange(from, to),
+    ]);
+    // TODO
+    return calcApr(ausdc, appData, period);
+  } catch (_) {
+    return [];
+  }
 }
 
 export async function getAppDataInTimestampRange(
   from: number,
   to: number
 ): Promise<AppDataItem[]> {
-  let appData: AppDataItem[] = [];
-
   try {
-    appData = await AppDataService.getDataInTimestampRange(from, to);
-  } catch (_) {}
-
-  return appData;
+    return AppDataService.getDataInTimestampRange(from, to);
+  } catch (_) {
+    return [];
+  }
 }
 
 export async function getUserDataInTimestampRange(
@@ -115,18 +97,27 @@ export async function getUserDataInTimestampRange(
   to: number,
   period: number
 ): Promise<UserAsset[]> {
-  let userData: UserDataItem[] = [];
-
   try {
-    userData = await UserDataService.getDataInTimestampRange(address, from, to);
-  } catch (_) {}
-
-  return getAggregatedAssetList(userData, period);
+    const userData = await UserDataService.getDataInTimestampRange(
+      address,
+      from,
+      to
+    );
+    // TODO
+    return getAggregatedAssetList(userData, period);
+  } catch (_) {
+    return [];
+  }
 }
 
-export async function updateUserAssets(addressList: string[]): Promise<void> {
+export async function updateUserAssets(
+  addressList: string[]
+): Promise<boolean> {
   try {
     const { bankAddress, rpc } = await getCwHelpers(ENV.SEED);
     await updateUserData(CHAIN_ID, rpc, addressList, bankAddress);
-  } catch (_) {}
+    return true;
+  } catch (_) {
+    return false;
+  }
 }

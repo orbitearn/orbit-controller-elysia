@@ -203,7 +203,7 @@ app.group("/api", (app) =>
         body: t.Object({
           addressList: t.ArrayString(),
         }),
-        response: t.Void(),
+        response: t.Boolean(),
       }
     )
 );
