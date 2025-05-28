@@ -1,6 +1,6 @@
 ### Project Description
 
-***orbit-controller*** (distribution controller) is a script running Express.js server to update contract state and DB data periodically. It pauses the contract, queries estimated aUSDC price from strategy controller, collects user data, calculates expected total yield, USDC yield and assets to buy. After that it sends the tx to claim yield, swap assets and update aUSDC price in the contract (finally the contract will be unpaused automatically). Also it stores historical data in MongoDB and provides REST API for all time data 
+***orbit-controller-elysia*** (distribution controller) is a script running Elysia server to update contract state and DB data periodically. It enables capture mode of the contract, queries estimated aUSDC price, collects user data, calculates expected total yield, USDC yield and assets to buy. After that it sends the tx to claim yield, swap assets and update aUSDC price in the contract. Also it stores historical data in MongoDB and provides REST API for all time data 
 
 
 ### Settings (Ubuntu 22.04)
@@ -17,22 +17,20 @@ sudo apt-get install -y curl
 sudo apt-get install git
 ```
 
-3) Install and check Node.js 20, yarn
+3) Install and check volta, Node.js, bun
 ```
-curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
-sudo -E bash nodesource_setup.sh
-sudo apt-get install -y nodejs
-node -v
+curl https://get.volta.sh | bash
+volta install node@22.15.1
 
-npm install --global yarn
-yarn -v
+curl -fsSL https://bun.sh/install | bash
+bun -v
 ```
 
 4) Clone the project repositiry and install dependencies
 
 ```
-git clone https://github.com/orbitearn/orbit-controller.git
-cd orbit-controller && yarn
+git clone https://github.com/orbitearn/orbit-controller-elysia.git
+cd orbit-controller-elysia && bun i
 ```
 
 5) Create env file and specify seed phrase for account sending messages to orbit contract
@@ -74,9 +72,9 @@ IS_PROD=true
 
 Save the file (Ctrl+X, then Y, then Enter)
 
-6) Replenish the account balance with several amount of NTRN
+6) Replenish the account balance with several amount of NTRN (optional step)
 
-7) Specify the account address in address config of the orbit bank contract
+7) Specify the account address in address config of the orbit bank contract (optional step)
 
 ```
 {
@@ -86,65 +84,14 @@ Save the file (Ctrl+X, then Y, then Enter)
 }
 ```
 
-8) Enable restarting server on schedule and running script on system start
-
-Create a systemd service file for the application
+8) Build app binary
 ```
-nano /etc/systemd/system/orbit.service
+bun compile
 ```
 
-Add this content
+9) Run the server
 ```
-[Unit]
-Description=Orbit Controller
-After=network.target
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/root/orbit-controller
-ExecStart=/root/orbit-controller/run.sh
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Enable and start the service
-```
-sudo systemctl daemon-reload
-sudo systemctl enable orbit.service
-sudo systemctl start orbit.service
-```
-
-Open the crontab for root
-```
-sudo crontab -e
-```
-
-Add this line to restart the service every day at 8 pm UTC
-```
-0 20 * * * /sbin/reboot
-```
-
-Verify service status
-```
-sudo systemctl status orbit.service
-```
-
-9) Run the service
-```
-sudo systemctl daemon-reload && sudo systemctl restart orbit.service
-```
-
-10) Note: to find and kill uncompleted process use
-```
-sudo systemctl stop orbit.service && sudo systemctl disable orbit.service && sudo systemctl daemon-reload && sudo systemctl reset-failed
-```
-Optionally
-```
-sudo lsof -i :<port>
-sudo kill -9 <PID>
+./run.sh
 ```
 
 ### Updating the Codebase
@@ -153,21 +100,24 @@ To update the codebase:
 
 1) Stop the service
 ```
-sudo systemctl stop orbit.service && sudo systemctl disable orbit.service && sudo systemctl daemon-reload && sudo systemctl reset-failed
+sudo lsof -i :<port>
+sudo kill -9 <PID>
 ```
 2) Fetch updates
 ```
-cd orbit-controller && git fetch origin && git reset --hard origin/main && yarn
+cd orbit-controller-elysia && git fetch origin && git reset --hard origin/main && bun i && bun compile
 ```
 3) Restart the service
 ```
-sudo systemctl daemon-reload && sudo systemctl enable orbit.service && sudo systemctl restart orbit.service
+./run.sh
 ```
 
 
 ## REST API
 
-Base URL is `http://<server_ip>:<port>/api`
+Swagger interface: `http://<server_ip>:<port>/swagger`
+
+Base API URL is `http://<server_ip>:<port>/api`
 
 GET requests:
 
@@ -179,15 +129,15 @@ GET requests:
 
 `/apr` - returns list of APR (%) and timestamp period end as `[number, number][]`. Request parameters: `from` (required, number) - first timestamp of the list, `to` (required, number) - last timestamp of the list, `period` (required, string: "day" | "week" | "month" | "year") - timestamp period of the list
 
-`/app-data-in-timestamp-range` - returns list of streaming asset prices and timestamps as [IAppDataDocument[]](https://github.com/orbitearn/orbit-controller/blob/main/src/backend/db/types.ts#L20-L25). Request parameters: `from` (required, number) - first timestamp of the list, `to` (required, number) - last timestamp of the list
+`/app-data-in-timestamp-range` - returns list of streaming asset prices and timestamps as [AppDataItem[]](https://github.com/orbitearn/orbit-controller-elysia/blob/main/src/backend/interfaces/db.ts#L16). Request parameters: `from` (required, number) - first timestamp of the list, `to` (required, number) - last timestamp of the list
 
-`/user-data-in-timestamp-range` - returns list of user's bought in streaming assets and timestamp period end as [UserAsset[]](https://github.com/orbitearn/orbit-controller/blob/main/src/backend/helpers/index.ts#L227). Request parameters: `address` (required, string) - user's wallet, `from` (required, number) - first timestamp of the list, `to` (required, number) - last timestamp of the list, `period` (required, string: "none" | "day" | "week" | "month" | "year") - timestamp period of the list
+`/user-data-in-timestamp-range` - returns list of user's bought in streaming assets and timestamp period end as [UserDataItem[]](https://github.com/orbitearn/orbit-controller-elysia/blob/main/src/backend/interfaces/db.ts#L23). Request parameters: `address` (required, string) - user's wallet, `from` (required, number) - first timestamp of the list, `to` (required, number) - last timestamp of the list, `period` (required, string: "none" | "day" | "week" | "month" | "year") - timestamp period of the list
 
 POST requests:
 
 `/update-user-assets` - writes to DB users assets bought in streaming (calculated dynamically). If there is no assets to add it will handle corresponding error preserving successful response. Request parameters: `addressList` (required, string[]) - list of users
 
-<a id="distribution-period"></a> *[DISTRIBUTION_PERIOD](https://github.com/orbitearn/orbit-controller/blob/main/src/backend/constants.ts#L21)
+<a id="distribution-period"></a> *[DISTRIBUTION_PERIOD](https://github.com/orbitearn/orbit-controller-elysia/blob/main/src/backend/constants.ts#L17)
 
 
 ## Historical Data
